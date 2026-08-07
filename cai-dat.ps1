@@ -4,7 +4,7 @@
 
 $ErrorActionPreference = "Stop"
 
-# --- Ban ghim: doc tu may thay Son 07/08/2026
+# Phien ban ghim, kiem chung tren may tac gia 07/08/2026
 $BAN_HF   = "0.7.88"
 $KHO_NAY  = "https://github.com/sontyphu/autovideo-effects"
 $SKILL_G1 = Join-Path $env:USERPROFILE ".claude\skills\video-use"
@@ -25,15 +25,15 @@ function Hong($chu)    { Write-Host "  [HONG] $chu" -ForegroundColor Red }
 function Co-Lenh($ten) { $null -ne (Get-Command $ten -ErrorAction SilentlyContinue) }
 
 Write-Host ""
-Write-Host "  GOI HIEU UNG - LOP AUTOVIDEO" -ForegroundColor White
+Write-Host "  AUTOVIDEO EFFECTS - GOI HIEU UNG" -ForegroundColor White
 Write-Host "  Le Thanh Son" -ForegroundColor DarkGray
 Write-Host ""
 
 # ------------------------------------------------- 0. Goi truoc da cai chua
-Tieu-De "Buoc 0/4 - Kiem goi truoc"
+Tieu-De "Buoc 0/4 - Kiem dieu kien tien quyet"
 
 if (-not (Co-Lenh node)) {
-    Hong "Chua co Node.js - thuoc ve vao lop"
+    Hong "Thieu Node.js - thuoc phan chuan bi truoc khoa hoc"
     Write-Host "  https://sontyphu.github.io/hoc-auto-video/chuan-bi/" -ForegroundColor Cyan
     Write-Host ""
     return
@@ -42,16 +42,16 @@ Dat "Node.js da co: $(node -v)"
 
 if (-not (Test-Path (Join-Path $SKILL_G1 "helpers\transcript_hyperframes.py"))) {
     Write-Host ""
-    Hong "Chua cai Goi Cat + Giong"
+    Hong "Chua cai Goi Cat va Giong"
     Write-Host ""
-    Write-Host "  Goi Hieu ung can Goi Cat + Giong chay truoc, vi phan boc loi" -ForegroundColor Yellow
-    Write-Host "  tieng Viet nam o goi do. Cai goi kia truoc roi quay lai day:" -ForegroundColor Yellow
+    Write-Host "  Goi Hieu ung phu thuoc Goi Cat va Giong, vi phan boc loi" -ForegroundColor Yellow
+    Write-Host "  tieng Viet nam o goi do. Cai goi do truoc theo lien ket sau:" -ForegroundColor Yellow
     Write-Host ""
     Write-Host "  irm https://raw.githubusercontent.com/sontyphu/autovideo-toolkit/main/cai-dat.ps1 | iex" -ForegroundColor Cyan
     Write-Host ""
     return
 }
-Dat "Goi Cat + Giong da co"
+Dat "Goi Cat va Giong da cai"
 
 # ------------------------------------------------- 1. HyperFrames
 Tieu-De "Buoc 1/4 - Phan mem chen hieu ung"
@@ -66,15 +66,15 @@ if ($banDangCo -eq $BAN_HF) {
     else { Write-Host "  Dang cai (khoang 2 phut)..." }
     $ma = Chay-Ngoai { npm install -g "hyperframes@$BAN_HF" }
     if ($ma -ne 0) {
-        Hong "Cai that bai - thuong la do thieu quyen"
+        Hong "Cai dat that bai, thuong do thieu quyen quan tri"
         Write-Host ""
         Write-Host "  Cach xu: bam chuot phai vao PowerShell chon 'Run as administrator'," -ForegroundColor Yellow
-        Write-Host "  roi chay lai dung lenh nay." -ForegroundColor Yellow
+        Write-Host "  sau do chay lai lenh nay." -ForegroundColor Yellow
         Write-Host ""
         return
     }
     if ((Co-Lenh hyperframes) -and ((hyperframes --version) -eq $BAN_HF)) { Dat "Da cai ban $BAN_HF" }
-    else { Hong "Cai xong ma may chua nhan - dong PowerShell mo lai roi chay lai"; return }
+    else { Hong "Da cai nhung he thong chua nhan. Dong PowerShell, mo lai va chay lai"; return }
 }
 
 # ------------------------------------------------- 2. Bo chu tieng Viet
@@ -88,7 +88,7 @@ if (Test-Path (Join-Path $DICH ".git")) {
 } else {
     if (Test-Path $DICH) { Remove-Item $DICH -Recurse -Force }
     $maC = Chay-Ngoai { git clone --quiet $KHO_NAY $DICH }
-    if ($maC -ne 0) { Hong "Tai bo chu that bai - kiem lai mang"; return }
+    if ($maC -ne 0) { Hong "Tai bo phong chu that bai. Kiem tra ket noi mang"; return }
     Dat "Da tai ve: $DICH"
 }
 
@@ -100,7 +100,7 @@ if (Test-Path $khoChrome) {
     Dat "Da co san"
 } else {
     Thieu "Chua co - may se tu tai ~150 MB o lan dau dung video"
-    Write-Host "  Do la binh thuong, khong phai may treo. Cu de chay." -ForegroundColor DarkGray
+    Write-Host "  Day la hanh vi binh thuong o lan dung video dau tien." -ForegroundColor DarkGray
 }
 
 # ------------------------------------------------- 4. Kiem tra
@@ -114,9 +114,9 @@ if (Test-Path (Join-Path $DICH "hyperframes-viet\DOC-TRUOC.md")) { Dat "Bang 13 
 Write-Host ""
 Write-Host "  $diem/3 muc dat" -ForegroundColor White
 Write-Host ""
-Write-Host "  DOC TRUOC KHI LAM VIDEO - 3 phut, do mat vai tieng:" -ForegroundColor Yellow
+Write-Host "  TAI LIEU CAN DOC TRUOC KHI DUNG VIDEO:" -ForegroundColor Yellow
 Write-Host "  $DICH\hyperframes-viet\DOC-TRUOC.md" -ForegroundColor Cyan
 Write-Host ""
-Write-Host "  Bat dau du an moi thi chay:" -ForegroundColor DarkGray
+Write-Host "  Khoi tao du an moi:" -ForegroundColor DarkGray
 Write-Host "  $DICH\hyperframes-viet\vao-viec.ps1 -DuAn `"duong\dan\du-an`" -KemKhuonMau" -ForegroundColor DarkGray
 Write-Host ""

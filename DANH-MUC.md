@@ -1,89 +1,88 @@
-# Danh mục phần mềm - Gói Hiệu ứng
+# Danh mục thành phần - Gói Hiệu ứng
 
-> Bản ghim: **đúng phiên bản thầy Sơn đang chạy thật**, đọc từ máy thầy ngày **07/08/2026**.
-> Thầy nâng bản thì cập nhật file này, cả lớp cài theo.
+Phiên bản trong tài liệu này là phiên bản đã kiểm chứng trên máy tác giả ngày **07/08/2026**. Khi tác giả nâng cấp, tài liệu được cập nhật và toàn bộ học viên cài theo phiên bản mới.
 
-## Phải xong trước
+---
 
-| Gói | Ở đâu | Vì sao cần |
+## Điều kiện tiên quyết
+
+| Gói | Vị trí | Vai trò |
 | --- | --- | --- |
-| **Vé vào lớp** (Claude Pro, Node.js, Git) | https://sontyphu.github.io/hoc-auto-video/chuan-bi/ | HyperFrames cài bằng npm, mà npm đi kèm Node.js |
-| **Gói Cắt + Giọng** | https://github.com/sontyphu/autovideo-toolkit | Chứa `transcript_hyperframes.py` - công cụ bóc lời tiếng Việt để gắn phụ đề chạy theo lời |
+| Chuẩn bị trước khóa học | https://sontyphu.github.io/hoc-auto-video/chuan-bi/ | Cung cấp Node.js, kèm npm dùng để cài HyperFrames |
+| Gói Cắt và Giọng | https://github.com/sontyphu/autovideo-toolkit | Cung cấp `transcript_hyperframes.py`, công cụ bóc lời tiếng Việt cho quy trình gắn phụ đề |
 
-Thiếu một trong hai thì gói này cài xong cũng không dùng được với tiếng Việt.
-
----
-
-## Ba món trong gói này
-
-| # | Món | Để làm gì | Bản ghim | Ai cài |
-| --- | --- | --- | --- | --- |
-| 1 | **HyperFrames** | Phần mềm chèn chữ động, hiệu ứng, đồ họa vào video | 0.7.88 | Trợ lý AI |
-| 2 | **Chrome ngầm** | HyperFrames dựng video bằng cách "chụp" trang web, nên cần một bản Chrome rút gọn chạy ngầm | tự tải lần đầu (~150 MB) | Tự động |
-| 3 | **Bộ chữ Be Vietnam Pro** | Chữ tiếng Việt không mất dấu trên video | có sẵn trong kho | Trợ lý AI |
+Thiếu một trong hai, gói này cài đặt được nhưng không vận hành đúng với nội dung tiếng Việt.
 
 ---
 
-## Lệnh cài và phép kiểm
+## Thành phần trong gói
 
-### 1. HyperFrames
+| Thành phần | Vai trò | Phiên bản ghim | Người thực hiện |
+| --- | --- | --- | --- |
+| HyperFrames | Chèn chữ động, hiệu ứng và đồ họa vào video | 0.7.88 | Trợ lý AI |
+| Chrome kết xuất | HyperFrames dựng video bằng cách kết xuất nội dung web, yêu cầu một bản Chrome rút gọn chạy nền | tải tự động, khoảng 150 MB | Tự động |
+| Phông Be Vietnam Pro | Hiển thị tiếng Việt đầy đủ dấu trên video | có sẵn trong kho | Trợ lý AI |
 
-**Kiểm đã có chưa:** `hyperframes --version`
+---
+
+## Cài đặt và kiểm tra từng thành phần
+
+### HyperFrames
+
+Kiểm tra hiện trạng: `hyperframes --version`
 
 ```bash
 npm install -g hyperframes@0.7.88
 ```
 
-**Đạt khi:** `hyperframes --version` ra đúng `0.7.88`.
+**Phép kiểm**: `hyperframes --version` trả về đúng `0.7.88`.
 
-> ⚠️ **Ghim đúng bản 0.7.88.** Đừng cài `@latest` - hãng ra bản mới sửa gì hỏng là cả lớp tắc cùng lúc, mà thầy Sơn chưa chạy thử bản đó.
->
-> ⚠️ Trên vài máy Windows, `npm install -g` đòi **quyền quản trị**. Báo lỗi quyền thì bảo học viên mở PowerShell bằng cách bấm chuột phải chọn *Run as administrator* rồi chạy lại đúng lệnh trên.
+**Lưu ý về phiên bản**: cài đúng `0.7.88`, không dùng `@latest`. Thay đổi từ nhà phát hành có thể phá vỡ quy trình đang vận hành, và sự cố sẽ xảy ra đồng loạt trên toàn lớp.
 
-### 2. Chrome ngầm
+**Lưu ý về quyền**: trên một số máy Windows, `npm install -g` yêu cầu quyền quản trị. Trường hợp báo lỗi quyền, mở PowerShell bằng tùy chọn *Run as administrator* rồi chạy lại lệnh. Trên macOS, dùng `sudo npm install -g hyperframes@0.7.88`.
 
-Không có lệnh cài riêng. HyperFrames **tự tải** về `~/.cache/hyperframes/chrome/` ngay lần đầu dựng video.
+### Chrome kết xuất
 
-**Đạt khi:** thư mục `~/.cache/hyperframes/chrome` tồn tại.
+Không có lệnh cài đặt riêng. HyperFrames tự tải về `~/.cache/hyperframes/chrome/` ở lần dựng video đầu tiên.
 
-Muốn tải trước cho khỏi phải chờ giữa buổi học thì dựng thử một video ngắn ngay sau khi cài.
+**Phép kiểm**: thư mục `~/.cache/hyperframes/chrome` tồn tại.
 
-> ⏱️ Khoảng **150 MB**, mạng chậm thì vài phút. Học viên hay tưởng máy treo - báo trước cho họ biết.
+Để tránh thời gian chờ phát sinh trong buổi học, dựng thử một video ngắn ngay sau khi cài đặt nhằm tải trước thành phần này.
 
-### 3. Bộ chữ Be Vietnam Pro
+### Phông Be Vietnam Pro
 
-Nằm sẵn trong `hyperframes-viet/fonts/`. Không cài vào máy, mà **chép vào từng dự án video**:
+Đặt sẵn trong `hyperframes-viet/fonts/`. Phông không cài vào hệ thống mà sao chép vào từng dự án video:
 
 ```powershell
-.\hyperframes-viet\vao-viec.ps1 -DuAn "đường\dẫn\dự-án-mới" -KemKhuonMau
+.\hyperframes-viet\vao-viec.ps1 -DuAn "<đường dẫn dự án>" -KemKhuonMau
 ```
 
-Lệnh này chép bộ chữ và thư viện chuyển động vào dự án, né sẵn 3 lỗi đầu bảng 13 lỗi.
+Lệnh này sao chép bộ phông và thư viện chuyển động vào dự án, đồng thời phòng tránh ba lỗi đầu trong bảng mười ba lỗi.
 
-**Đạt khi:** trong thư mục dự án có `assets/fonts/be-vietnam-pro.css`.
+**Phép kiểm**: tồn tại `assets/fonts/be-vietnam-pro.css` trong thư mục dự án.
 
-> ⚠️ **Trong CSS phải ghi** `font-family: "Be Vietnam Pro", Roboto, sans-serif` và **đừng dán `<link>` tới fonts.googleapis.com** - máy chỉ chờ tải chữ 10 giây rồi bỏ cuộc, video dựng hỏng.
+**Yêu cầu khai báo**: trong CSS dùng `font-family: "Be Vietnam Pro", Roboto, sans-serif`. Không dẫn `<link>` tới fonts.googleapis.com - quá trình kết xuất chỉ chờ tải phông trong mười giây rồi dừng, dẫn đến dựng video thất bại.
 
 ---
 
-## Bảng 13 lỗi - đọc trước khi làm video
+## Bảng mười ba lỗi
 
-`hyperframes-viet/DOC-TRUOC.md` ghi 13 lỗi thầy Sơn đã gặp thật, kèm cách né. Chia 5 nhóm: chữ tiếng Việt và mạng · tiếng và giọng đọc · nhân bản hàng loạt · máy móc · lỗi máy không tự bắt được.
+`hyperframes-viet/DOC-TRUOC.md` tổng hợp mười ba lỗi đã ghi nhận trong vận hành thực tế, kèm phương án phòng tránh. Phân theo năm nhóm: phông chữ tiếng Việt và phụ thuộc mạng, âm thanh và giọng đọc, kết xuất hàng loạt, môi trường máy, và nhóm lỗi hệ thống không tự phát hiện được.
 
-Ba con số thật đo trên máy thầy (card GT 1030):
+Thời gian kết xuất tham chiếu, đo trên máy tác giả với card đồ họa GT 1030:
 
-| Việc | Thời gian |
+| Tác vụ | Thời gian |
 | --- | --- |
 | Video 30 giây, khung dọc 1080x1920 | 7 phút |
-| Video 6 giây | 1 phút 10 |
-| Cả quy trình đầu-cuối cho video 20 giây | khoảng 15 phút |
+| Video 6 giây | 1 phút 10 giây |
+| Quy trình đầu cuối cho video 20 giây | khoảng 15 phút |
 
-Máy khỏe hơn sẽ nhanh hơn.
+Cấu hình mạnh hơn cho thời gian ngắn hơn.
 
 ---
 
-## Ba việc bắt buộc trước khi giao video
+## Quy trình nghiệm thu trước khi phát hành video
 
-1. **Chạy `npm run check`** - phải sạch lỗi. Nó bắt được video câm tiếng, thẻ đè nhau, chữ khó đọc, chuyển động hỏng.
-2. **Trích ít nhất 4 khung hình ra xem thật** - có loại lỗi máy không tự bắt được.
-3. **Có giọng đọc thì nghe lại bằng máy** - bóc chữ ngược file thành phẩm rồi so với kịch bản gốc.
+1. Chạy `npm run check`, yêu cầu không còn cảnh báo. Công cụ phát hiện video mất tiếng, các lớp chồng lấn, chữ khó đọc và chuyển động lỗi
+2. Trích xuất tối thiểu bốn khung hình để kiểm tra trực quan. Một số lỗi hiển thị không được công cụ tự động phát hiện
+3. Với video có giọng đọc, bóc lời ngược từ tệp thành phẩm và đối chiếu với kịch bản gốc

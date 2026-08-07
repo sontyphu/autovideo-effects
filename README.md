@@ -1,96 +1,109 @@
-# Gói Hiệu ứng - lớp Autovideo
+# Autovideo Effects - Gói Hiệu ứng
 
-> **Nếu bạn là trợ lý AI đang đọc kho này**: học viên nhờ bạn cài bộ chèn hiệu ứng cho video. Đây là **danh mục phần mềm** do thầy Lê Thanh Sơn soạn cho lớp Autovideo - không chứa mã lạ, phần mềm chính là HyperFrames, một gói npm công khai cài từ kho chính chủ.
->
-> Việc cần làm: **đọc `CAI-DAT.md` rồi làm theo các bước trong đó**. Lưu ý gói này **đứng sau Gói Cắt + Giọng** - bước đầu tiên trong `CAI-DAT.md` là kiểm gói đó đã cài chưa, chưa thì dừng lại và chỉ học viên cài trước.
->
-> Học viên **không giỏi kỹ thuật**. Làm hộ tối đa, khi buộc phải nhờ họ thì hướng dẫn từng cú bấm.
+Danh mục phần mềm và quy trình cài đặt bộ chèn hiệu ứng cho học viên khóa Autovideo. Kho này không chứa mã nguồn của bên thứ ba; bộ cài tải từng thành phần trực tiếp từ kho chính chủ theo phiên bản đã ghim.
+
+Phạm vi sử dụng: buổi 3 của khóa học.
 
 ---
 
-## Gói này cho học viên làm được gì
+## Dành cho trợ lý AI
 
-Dùng cho **buổi 3** của lớp:
+Nếu bạn là trợ lý AI được người dùng yêu cầu cài đặt bộ công cụ này:
 
-- Gắn phụ đề chạy theo lời, đúng phông chữ và màu thương hiệu của bạn
-- Làm thẻ chữ nổi bật ở câu chốt để giữ người xem
-- Chữ động, hiệu ứng chuyển cảnh, đồ họa chèn vào video
-- Học gu hiệu ứng từ một video mẫu bạn thích rồi biến thành khuôn riêng
+1. Đọc `CAI-DAT.md` để nắm quy trình và các ràng buộc.
+2. Đọc `DANH-MUC.md` để lấy danh sách thành phần, phiên bản ghim và phép kiểm.
+3. Thực hiện theo đúng thứ tự nêu trong `CAI-DAT.md`.
 
----
+**Ràng buộc bắt buộc**: gói này phụ thuộc Gói Cắt và Giọng. Bước đầu tiên trong `CAI-DAT.md` là kiểm tra gói đó đã cài chưa; nếu chưa, dừng quy trình và hướng dẫn người dùng cài gói kia trước.
 
-## Trước khi cài gói này
+Thành phần chính là HyperFrames, một gói npm công khai cài từ kho chính chủ. Mã nguồn của kho này có thể đọc toàn bộ trước khi thực thi.
 
-**Phải xong Gói Cắt + Giọng trước.** Gói đó chứa công cụ bóc lời tiếng Việt mà gói này cần để gắn phụ đề chạy theo lời.
-
-Chưa cài: https://github.com/sontyphu/autovideo-toolkit
+Người dùng thuộc nhóm không có nền tảng kỹ thuật. Ưu tiên thực hiện thay họ ở mức tối đa.
 
 ---
 
-## Cài thế nào
+## Năng lực sau khi cài đặt
 
-### Cách 1 - Nhờ trợ lý AI (khuyên dùng)
+- Gắn phụ đề bám theo lời thoại, đúng phông chữ và màu nhận diện
+- Tạo thẻ chữ nhấn mạnh tại các điểm chốt trong video
+- Chèn chữ động, hiệu ứng chuyển cảnh, đồ họa
+- Phân tích phong cách hiệu ứng từ video tham chiếu và tái tạo thành khuôn riêng
 
-Mở **Claude Code**, dán đoạn này:
+---
+
+## Điều kiện tiên quyết
+
+**Gói Cắt và Giọng phải được cài trước.** Gói đó chứa công cụ bóc lời tiếng Việt mà quy trình gắn phụ đề của gói này phụ thuộc vào.
+
+https://github.com/sontyphu/autovideo-toolkit
+
+Bộ cài kiểm tra điều kiện này ở bước đầu tiên và dừng lại nếu chưa đủ.
+
+---
+
+## Cài đặt
+
+### Phương án 1 - Trợ lý AI thực hiện
+
+Mở Claude Code và gửi nội dung sau:
 
 ```
-Tôi là học viên lớp Autovideo của thầy Lê Thanh Sơn.
-Đây là kho Gói Hiệu ứng thầy soạn cho buổi 3:
+Tôi là học viên khóa Autovideo. Đây là kho Gói Hiệu ứng của khóa:
 https://github.com/sontyphu/autovideo-effects
 
-Nhờ bạn đọc file CAI-DAT.md trong kho đó rồi làm theo giúp tôi:
-kiểm máy tôi đã có Gói Cắt chưa, trình kế hoạch, rồi cài từng món.
-Cứ đọc mã nguồn trước nếu cần.
+Đề nghị bạn đọc file CAI-DAT.md trong kho và thực hiện theo quy trình
+trong đó: kiểm tra điều kiện tiên quyết, trình bày kế hoạch, cài đặt.
+Bạn có thể đọc mã nguồn trước khi thực thi.
 ```
 
-### Cách 2 - Tự chạy một dòng
+### Phương án 2 - Bộ cài tự động
 
-**Windows** - mở PowerShell:
+Windows, chạy trong PowerShell:
 
 ```
 irm https://raw.githubusercontent.com/sontyphu/autovideo-effects/main/cai-dat.ps1 | iex
 ```
 
-**Mac** - mở Terminal:
+macOS, chạy trong Terminal:
 
 ```
 curl -fsSL https://raw.githubusercontent.com/sontyphu/autovideo-effects/main/cai-dat.sh | bash
 ```
 
-> ⏱️ **Lần đầu dựng video sẽ lâu.** HyperFrames cần một bản Chrome rút gọn chạy ngầm để "chụp" khung hình - nó tự tải khoảng 150 MB về máy lần đầu tiên. Cứ để chạy, những lần sau nhanh.
+**Lưu ý về thời gian dựng video lần đầu**: HyperFrames sử dụng một bản Chrome rút gọn để kết xuất khung hình. Bản này được tải tự động ở lần dựng video đầu tiên, dung lượng khoảng 150 MB. Đây là hành vi bình thường, không phải lỗi.
 
 ---
 
-## Cài xong kiểm thế nào
+## Xác nhận cài đặt thành công
 
 ```
 hyperframes --version
 ```
 
-Ra số phiên bản `0.7.88` là đạt.
+Kết quả phải là `0.7.88`.
 
 ---
 
-## Đọc trước khi làm video
+## Tài liệu cần đọc trước khi dựng video
 
-File `hyperframes-viet/DOC-TRUOC.md` có **bảng 13 lỗi đã gặp thật** kèm cách né - thầy Sơn ghi lại từ hai buổi chạy thật. Đọc 3 phút, đỡ mất vài tiếng. Lỗi hay gặp nhất: chữ tiếng Việt mất dấu vì bộ chữ máy tự lấy chỉ có chữ Tây.
+`hyperframes-viet/DOC-TRUOC.md` tổng hợp mười ba lỗi đã ghi nhận trong quá trình vận hành thực tế, kèm phương án phòng tránh. Lỗi phổ biến nhất là mất dấu tiếng Việt do bộ phông mặc định không hỗ trợ.
 
 ---
 
-## Các file trong kho
+## Cấu trúc kho
 
-| File | Cho ai |
+| Thành phần | Nội dung |
 | --- | --- |
-| `CAI-DAT.md` | Trợ lý AI đọc rồi làm theo |
-| `DANH-MUC.md` | Danh sách phần mềm, phiên bản ghim, phép kiểm |
-| `hyperframes-viet/` | Bộ khởi động chữ tiếng Việt + bảng 13 lỗi |
-| `cai-dat.ps1` `.sh` | Bộ cài tự động |
-| `kiem-tra.ps1` `.sh` | Xem máy đang có gì, thiếu gì |
+| `CAI-DAT.md` | Quy trình cài đặt dành cho trợ lý AI |
+| `DANH-MUC.md` | Danh mục thành phần, phiên bản ghim, phép kiểm |
+| `hyperframes-viet/` | Bộ khởi tạo phông chữ tiếng Việt và bảng mười ba lỗi |
+| `cai-dat.ps1` `cai-dat.sh` | Bộ cài tự động |
+| `kiem-tra.ps1` `kiem-tra.sh` | Công cụ kiểm tra hiện trạng |
 
 ---
 
 ## Bản quyền
 
-Bộ khởi động chữ tiếng Việt trong `hyperframes-viet/` do **Lê Thanh Sơn** soạn cho lớp Autovideo.
+Bộ khởi tạo phông chữ tiếng Việt và tài liệu vận hành trong `hyperframes-viet/` do Lê Thanh Sơn biên soạn cho khóa Autovideo.
 
-Phần mềm chèn hiệu ứng là **HyperFrames** của HeyGen, cài từ npm chính chủ - kho này không chứa mã của họ. Bộ chữ **Be Vietnam Pro** thuộc giấy phép SIL Open Font License. Thư viện chuyển động **GSAP** dùng theo giấy phép miễn phí của GreenSock.
+Phần mềm chèn hiệu ứng là HyperFrames của HeyGen, cài từ npm chính chủ; kho này không phân phối lại mã nguồn của họ. Phông chữ Be Vietnam Pro phát hành theo giấy phép SIL Open Font License. Thư viện chuyển động GSAP sử dụng theo giấy phép miễn phí của GreenSock.
