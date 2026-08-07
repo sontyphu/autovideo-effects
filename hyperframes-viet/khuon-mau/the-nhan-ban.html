@@ -1,0 +1,144 @@
+<!doctype html>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Thẻ chương - khuôn nhân bản</title>
+    <link rel="stylesheet" href="../assets/fonts/be-vietnam-pro.css" />
+    <!-- Màu lấy từ kho gu của bạn (thư mục kho-gu/). -->
+    <link rel="stylesheet" href="../assets/gu.css" />
+    <script src="../assets/js/gsap.min.js"></script>
+    <style>
+      html,
+      body {
+        margin: 0;
+        padding: 0;
+        width: 1080px;
+        height: 1920px;
+        overflow: hidden;
+        background: var(--nen);
+        font-family: var(--font-chinh);
+        color: var(--chu);
+      }
+      #the-chuong {
+        position: relative;
+        width: 1080px;
+        height: 1920px;
+        overflow: hidden;
+        background: var(--nen);
+      }
+      .glow {
+        position: absolute;
+        inset: 0;
+        background:
+          radial-gradient(
+            700px 520px at 12% 10%,
+            color-mix(in srgb, var(--nhan) 18%, transparent),
+            transparent 62%
+          ),
+          radial-gradient(
+            740px 540px at 94% 86%,
+            color-mix(in srgb, var(--nhan-2) 12%, transparent),
+            transparent 62%
+          );
+      }
+      .khung {
+        position: absolute;
+        inset: 0;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        padding: 0 96px;
+        box-sizing: border-box;
+      }
+      .nhan {
+        font-size: 36px;
+        font-weight: 600;
+        letter-spacing: 0.24em;
+        text-transform: uppercase;
+        color: var(--nhan);
+        margin-bottom: 38px;
+      }
+      .ten {
+        font-size: 104px;
+        font-weight: 800;
+        line-height: 1.1;
+        letter-spacing: -0.02em;
+        margin: 0;
+        max-width: 860px;
+      }
+      .so {
+        font-size: 72px;
+        font-weight: 800;
+        color: var(--nhan-2);
+        margin-top: 54px;
+      }
+      .vai-tro {
+        font-size: 44px;
+        color: var(--chu-phu);
+        margin-top: 22px;
+        max-width: 780px;
+        line-height: 1.4;
+      }
+      .brand {
+        position: absolute;
+        bottom: 96px;
+        left: 0;
+        right: 0;
+        text-align: center;
+        font-size: 32px;
+        letter-spacing: 0.16em;
+        color: var(--chu-mo);
+        text-transform: uppercase;
+      }
+    </style>
+  </head>
+  <body>
+    <div
+      id="the-chuong"
+      data-composition-id="the-chuong"
+      data-width="1080"
+      data-height="1920"
+      data-start="0"
+      data-duration="6"
+      data-composition-variables='{"so_chuong":"0","ten_chuong":"Tên chương","so_bai":"0","vai_tro":"Vai trò của chương"}'
+    >
+      <div class="glow"></div>
+      <div class="khung">
+        <p class="nhan" id="nhan">Chương 0</p>
+        <h1 class="ten" id="ten">Tên chương</h1>
+        <p class="so" id="so">0 bài</p>
+        <p class="vai-tro" id="vai-tro">Vai trò</p>
+      </div>
+      <div class="brand">Xưởng Video AI</div>
+
+      <script>
+        const bien = window.__hyperframes.getVariables();
+        document.getElementById("nhan").textContent =
+          "Chương " + bien.so_chuong;
+        document.getElementById("ten").textContent = bien.ten_chuong;
+        document.getElementById("so").textContent = bien.so_bai + " bài";
+        document.getElementById("vai-tro").textContent = bien.vai_tro;
+
+        const tl = gsap.timeline({ paused: true });
+        tl.from(".nhan", { opacity: 0, y: 30, duration: 0.5, ease: "power3.out" }, 0.1);
+        tl.from(
+          ".ten",
+          { opacity: 0, scale: 0.9, duration: 0.8, ease: "back.out(1.5)" },
+          0.35,
+        );
+        tl.from(".so", { opacity: 0, y: 34, duration: 0.6, ease: "power3.out" }, 1.2);
+        tl.from(
+          ".vai-tro",
+          { opacity: 0, y: 34, duration: 0.6, ease: "power3.out" },
+          1.7,
+        );
+        tl.to(".khung", { opacity: 0, duration: 0.5, ease: "power2.in" }, 5.4);
+
+        window.__timelines = window.__timelines || {};
+        window.__timelines["the-chuong"] = tl;
+      </script>
+    </div>
+  </body>
+</html>

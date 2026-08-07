@@ -1,0 +1,100 @@
+<!doctype html>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Thẻ tên nền trong suốt</title>
+    <link rel="stylesheet" href="../assets/fonts/be-vietnam-pro.css" />
+    <script src="../assets/js/gsap.min.js"></script>
+    <style>
+      html,
+      body {
+        margin: 0;
+        padding: 0;
+        width: 1080px;
+        height: 1920px;
+        overflow: hidden;
+        background: transparent;
+        font-family: "Be Vietnam Pro", Roboto, sans-serif;
+      }
+      #overlay {
+        position: relative;
+        width: 1080px;
+        height: 1920px;
+        overflow: hidden;
+        background: transparent;
+      }
+      .the-ten {
+        position: absolute;
+        left: 72px;
+        bottom: 300px;
+        display: flex;
+        align-items: center;
+        gap: 26px;
+        background: rgba(11, 15, 26, 0.86);
+        border-left: 10px solid #e2562b;
+        border-radius: 0 22px 22px 0;
+        padding: 30px 44px 30px 34px;
+      }
+      .the-ten .ten {
+        font-size: 52px;
+        font-weight: 800;
+        color: #f3f4f6;
+        line-height: 1.1;
+      }
+      .the-ten .nghe {
+        font-size: 32px;
+        font-weight: 500;
+        color: #f5a524;
+        margin-top: 8px;
+        letter-spacing: 0.04em;
+      }
+      .vach {
+        position: absolute;
+        left: 72px;
+        bottom: 300px;
+        width: 10px;
+        height: 132px;
+        background: #e2562b;
+        border-radius: 4px;
+      }
+    </style>
+  </head>
+  <body>
+    <div
+      id="overlay"
+      data-composition-id="overlay"
+      data-width="1080"
+      data-height="1920"
+      data-start="0"
+      data-duration="6"
+    >
+      <div class="vach"></div>
+      <div class="the-ten">
+        <div>
+          <div class="ten">Lê Thanh Sơn</div>
+          <div class="nghe">Đào tạo doanh nghiệp ứng dụng AI</div>
+        </div>
+      </div>
+
+      <script>
+        const tl = gsap.timeline({ paused: true });
+        gsap.set(".the-ten", { transformOrigin: "left center" });
+        tl.from(".vach", { scaleY: 0, duration: 0.35, ease: "power3.out" }, 0.2);
+        tl.from(
+          ".the-ten",
+          { scaleX: 0, opacity: 0, duration: 0.55, ease: "power3.out" },
+          0.45,
+        );
+        tl.to(
+          ".the-ten",
+          { scaleX: 0, opacity: 0, duration: 0.45, ease: "power2.in" },
+          5.1,
+        );
+        tl.to(".vach", { scaleY: 0, duration: 0.3, ease: "power2.in" }, 5.45);
+
+        window.__timelines = window.__timelines || {};
+        window.__timelines["overlay"] = tl;
+      </script>
+    </div>
+  </body>
+</html>
