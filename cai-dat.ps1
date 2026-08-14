@@ -30,7 +30,7 @@ Write-Host "  Le Thanh Son" -ForegroundColor DarkGray
 Write-Host ""
 
 # ------------------------------------------------- 0. Goi truoc da cai chua
-Tieu-De "Buoc 0/4 - Kiem dieu kien tien quyet"
+Tieu-De "Buoc 0/5 - Kiem dieu kien tien quyet"
 
 if (-not (Co-Lenh node)) {
     Hong "Thieu Node.js - thuoc phan chuan bi truoc khoa hoc"
@@ -54,7 +54,7 @@ if (-not (Test-Path (Join-Path $SKILL_G1 "helpers\transcript_hyperframes.py"))) 
 Dat "Goi Cat va Giong da cai"
 
 # ------------------------------------------------- 1. HyperFrames
-Tieu-De "Buoc 1/4 - Phan mem chen hieu ung"
+Tieu-De "Buoc 1/5 - Phan mem chen hieu ung"
 
 $banDangCo = ""
 if (Co-Lenh hyperframes) { $banDangCo = (hyperframes --version) }
@@ -78,7 +78,7 @@ if ($banDangCo -eq $BAN_HF) {
 }
 
 # ------------------------------------------------- 2. Bo chu tieng Viet
-Tieu-De "Buoc 2/4 - Bo chu tieng Viet"
+Tieu-De "Buoc 2/5 - Bo chu tieng Viet"
 
 if (Test-Path (Join-Path $DICH ".git")) {
     Push-Location $DICH
@@ -92,8 +92,20 @@ if (Test-Path (Join-Path $DICH ".git")) {
     Dat "Da tai ve: $DICH"
 }
 
-# ------------------------------------------------- 3. Chrome ngam
-Tieu-De "Buoc 3/4 - Chrome ngam (de dung hinh)"
+# ------------------------------------------------- 3. Kho am thanh
+Tieu-De "Buoc 3/5 - Kho am thanh (skill kho-am-thanh)"
+
+$SKILL_SFX = Join-Path $env:USERPROFILE ".claude\skills\kho-am-thanh"
+New-Item -ItemType Directory -Force $SKILL_SFX | Out-Null
+Copy-Item (Join-Path $DICH "sfx\*") $SKILL_SFX -Recurse -Force
+if (Test-Path (Join-Path $SKILL_SFX "SKILL.md")) {
+    Dat "63 tieng + luat chon tieng, tro ly tu nhan skill khi dung video"
+} else {
+    Thieu "kho am thanh - chay lai hoac bao lop"
+}
+
+# ------------------------------------------------- 4. Chrome ngam
+Tieu-De "Buoc 4/5 - Chrome ngam (de dung hinh)"
 
 $khoChrome = Join-Path $env:USERPROFILE ".cache\hyperframes\chrome"
 if (Test-Path $khoChrome) {
@@ -103,16 +115,17 @@ if (Test-Path $khoChrome) {
     Write-Host "  Day la hanh vi binh thuong o lan dung video dau tien." -ForegroundColor DarkGray
 }
 
-# ------------------------------------------------- 4. Kiem tra
-Tieu-De "Buoc 4/4 - Kiem tra"
+# ------------------------------------------------- 5. Kiem tra
+Tieu-De "Buoc 5/5 - Kiem tra"
 
 $diem = 0
 if ((Co-Lenh hyperframes) -and ((hyperframes --version) -eq $BAN_HF)) { Dat "Phan mem chen hieu ung ($BAN_HF)"; $diem++ } else { Thieu "phan mem chen hieu ung" }
 if (Test-Path (Join-Path $DICH "hyperframes-viet\fonts\be-vietnam-pro.css")) { Dat "Bo chu tieng Viet"; $diem++ } else { Thieu "bo chu tieng Viet" }
 if (Test-Path (Join-Path $DICH "hyperframes-viet\DOC-TRUOC.md")) { Dat "Bang 13 loi (doc truoc khi lam video)"; $diem++ } else { Thieu "bang 13 loi" }
+if (Test-Path (Join-Path $env:USERPROFILE ".claude\skills\kho-am-thanh\SKILL.md")) { Dat "Kho am thanh (skill kho-am-thanh)"; $diem++ } else { Thieu "kho am thanh" }
 
 Write-Host ""
-Write-Host "  $diem/3 muc dat" -ForegroundColor White
+Write-Host "  $diem/4 muc dat" -ForegroundColor White
 Write-Host ""
 Write-Host "  TAI LIEU CAN DOC TRUOC KHI DUNG VIDEO:" -ForegroundColor Yellow
 Write-Host "  $DICH\hyperframes-viet\DOC-TRUOC.md" -ForegroundColor Cyan

@@ -20,7 +20,7 @@ co_lenh() { command -v "$1" >/dev/null 2>&1; }
 printf "\n  AUTOVIDEO EFFECTS - GOI HIEU UNG\n  Le Thanh Son\n\n"
 
 # ------------------------------------------------- 0. Goi truoc
-tieu_de "Buoc 0/4 - Kiem dieu kien tien quyet"
+tieu_de "Buoc 0/5 - Kiem dieu kien tien quyet"
 
 if ! co_lenh node; then
   hong "Thieu Node.js - thuoc phan chuan bi truoc khoa hoc"
@@ -39,7 +39,7 @@ fi
 dat "Goi Cat va Giong da cai"
 
 # ------------------------------------------------- 1. HyperFrames
-tieu_de "Buoc 1/4 - Phan mem chen hieu ung"
+tieu_de "Buoc 1/5 - Phan mem chen hieu ung"
 
 BAN_DANG_CO=""
 co_lenh hyperframes && BAN_DANG_CO="$(hyperframes --version 2>/dev/null)"
@@ -60,7 +60,7 @@ else
 fi
 
 # ------------------------------------------------- 2. Bo chu tieng Viet
-tieu_de "Buoc 2/4 - Bo chu tieng Viet"
+tieu_de "Buoc 2/5 - Bo chu tieng Viet"
 
 if [ -d "$DICH/.git" ]; then
   git -C "$DICH" pull --quiet >/dev/null 2>&1
@@ -73,8 +73,20 @@ else
   dat "Da tai ve: $DICH"
 fi
 
-# ------------------------------------------------- 3. Chrome ngam
-tieu_de "Buoc 3/4 - Chrome ngam (de dung hinh)"
+# ------------------------------------------------- 3. Kho am thanh
+tieu_de "Buoc 3/5 - Kho am thanh (skill kho-am-thanh)"
+
+SKILL_SFX="$HOME/.claude/skills/kho-am-thanh"
+mkdir -p "$SKILL_SFX"
+cp -R "$DICH/sfx/." "$SKILL_SFX/"
+if [ -f "$SKILL_SFX/SKILL.md" ]; then
+  dat "63 tieng + luat chon tieng, tro ly tu nhan skill khi dung video"
+else
+  thieu "kho am thanh - chay lai hoac bao lop"
+fi
+
+# ------------------------------------------------- 4. Chrome ngam
+tieu_de "Buoc 4/5 - Chrome ngam (de dung hinh)"
 
 if [ -d "$HOME/.cache/hyperframes/chrome" ]; then
   dat "Da co san"
@@ -83,14 +95,15 @@ else
   echo "  Day la hanh vi binh thuong o lan dung video dau tien."
 fi
 
-# ------------------------------------------------- 4. Kiem tra
-tieu_de "Buoc 4/4 - Kiem tra"
+# ------------------------------------------------- 5. Kiem tra
+tieu_de "Buoc 5/5 - Kiem tra"
 
 DIEM=0
 if co_lenh hyperframes && [ "$(hyperframes --version)" = "$BAN_HF" ]; then dat "Phan mem chen hieu ung ($BAN_HF)"; DIEM=$((DIEM+1)); else thieu "phan mem chen hieu ung"; fi
 [ -f "$DICH/hyperframes-viet/fonts/be-vietnam-pro.css" ] && { dat "Bo chu tieng Viet"; DIEM=$((DIEM+1)); } || thieu "bo chu tieng Viet"
 [ -f "$DICH/hyperframes-viet/DOC-TRUOC.md" ] && { dat "Bang 13 loi (doc truoc khi lam video)"; DIEM=$((DIEM+1)); } || thieu "bang 13 loi"
+[ -f "$HOME/.claude/skills/kho-am-thanh/SKILL.md" ] && { dat "Kho am thanh (skill kho-am-thanh)"; DIEM=$((DIEM+1)); } || thieu "kho am thanh"
 
-printf "\n  %s/3 muc dat\n\n" "$DIEM"
+printf "\n  %s/4 muc dat\n\n" "$DIEM"
 printf "\033[33m  TAI LIEU CAN DOC TRUOC KHI DUNG VIDEO:\033[0m\n"
 printf "\033[36m  %s/hyperframes-viet/DOC-TRUOC.md\033[0m\n\n" "$DICH"
