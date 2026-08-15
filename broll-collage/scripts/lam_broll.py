@@ -445,7 +445,9 @@ def main():
 
     ket_qua, da_mau, da_canh = [], [], []
     for i, yc in enumerate(ds, 1):
-        print(f"[{i}/{len(ds)}] {yc.get('loi', '')[:60]}", file=sys.stderr)
+        # Chi bao tien do khi lam NHIEU canh; mot canh thi im lang cho gon mat.
+        if len(ds) > 1:
+            print(f"  Đang vẽ cảnh {i}/{len(ds)}: {yc.get('loi', '')[:55]}", file=sys.stderr)
         ket_qua.append(lam_mot(yc, a.fps, a.khung, a.thu_muc, i, da_mau, da_canh,
                                a.tu_video, a.xem_truoc))
 
