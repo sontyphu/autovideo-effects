@@ -1,5 +1,12 @@
 # Bo cai XUONG CANH TRAM B-ROLL (skill dung-broll-collage) - Windows
 # Hoc vien KHONG chay tay file nay. Tro ly AI tu chay khi ban dan cau lenh cai.
+Write-Host ""
+Write-Host "=== BO CAI NAY DANG NANG CAP - TAM DUNG ==="
+Write-Host "Xuong canh tram dang duoc chuyen sang HyperFrames cho dong bo voi lop."
+Write-Host "Cho thong bao moi tren trang hoc roi hay cai. Chua cai gi len may ban."
+Write-Host ""
+exit 1
+
 
 $ErrorActionPreference = 'Stop'
 Write-Host ""

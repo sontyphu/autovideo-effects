@@ -1,5 +1,12 @@
 #!/usr/bin/env bash
 # Bo cai XUONG CANH TRAM B-ROLL (skill dung-broll-collage) - Mac / Linux
+echo ""
+echo "=== BO CAI NAY DANG NANG CAP - TAM DUNG ==="
+echo "Xuong canh tram dang duoc chuyen sang HyperFrames cho dong bo voi lop."
+echo "Cho thong bao moi tren trang hoc roi hay cai. Chua cai gi len may ban."
+echo ""
+exit 1
+
 # Hoc vien KHONG chay tay file nay. Tro ly AI tu chay khi ban dan cau lenh cai.
 set -e
 
