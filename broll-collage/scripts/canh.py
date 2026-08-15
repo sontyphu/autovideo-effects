@@ -89,18 +89,20 @@ def quay_cat_xuat_ban(L, M):
     if L["wide"]:
         gi = (200, 110, 1520, 860); may = (330, 210)
         # duong phim chay NGANG tu day may quay toi dai phim (khong duoc dut mach)
-        duong = "M540 560 C 700 720, 820 470, 960 640 C 1030 720, 1060 690, 1090 700"
+        duong = "M540 560 C 700 720, 820 470, 960 640 C 1040 720, 1090 700, 1150 706"
         dai = (1080, 640); keo = (1400, 670); nut = (1560, 300); tay = (1400, 170)
     elif L["square"]:
-        gi = (120, 120, 840, 800); may = (270, 210); duong = "M480 520 C 560 660, 400 720, 520 820"
+        gi = (120, 120, 840, 800); may = (270, 210); duong = "M480 520 C 570 640, 400 730, 430 860"
         dai = (300, 800); keo = (620, 830); nut = (830, 300); tay = (700, 200)
     else:
-        gi = (230, 330, 620, 1180); may = (360, 430); duong = "M500 740 C 560 860, 400 950, 540 1060 C 660 1150, 520 1160, 545 1250"
+        gi = (230, 330, 620, 1180); may = (360, 430); duong = "M500 740 C 560 860, 400 950, 540 1060 C 660 1160, 480 1260, 470 1380"
         dai = (250, 1330); keo = (600, 1360); nut = (760, 1640); tay = (600, 1560)
 
     svg = f"""
 {tam_giay(*gi, M)}
 <path id="duong" d="{duong}" stroke="{M['accent']}" stroke-width="110" fill="none" stroke-linecap="round" style="filter:url(#sh)"/>
+<path id="loPhim" d="{duong}" stroke="{M['ink']}" stroke-width="110" fill="none" stroke-linecap="butt"
+      stroke-dasharray="13 54" opacity="0.42"/>
 <g transform="translate({may[0]} {may[1]})"><g id="may" style="filter:url(#sh)" opacity="0">
   <rect x="0" y="70" width="300" height="180" rx="18" fill="url(#ht)" stroke="{M['ink']}" stroke-width="6"/>
   <g id="cuon1"><circle cx="80" cy="55" r="62" fill="url(#ht)" stroke="{M['ink']}" stroke-width="6"/>
@@ -149,8 +151,13 @@ def quay_cat_xuat_ban(L, M):
 tl.from("#giay", {{y:-260, opacity:0, duration:0.5, ease:"steps(7)"}}, 0);
 // 2. duong phim ve dan (stroke-dash)
 var d=document.getElementById("duong"), len=d.getTotalLength();
-gsap.set(d, {{strokeDasharray:len, strokeDashoffset:len}});
+gsap.set(d, {{strokeDasharray:len, strokeDashoffset:len, opacity:0}});
+tl.set(d, {{opacity:1}}, 0.25);
 tl.to(d, {{strokeDashoffset:0, duration:1.0, ease:"steps(14)"}}, 0.25);
+// lo phim lo dan theo dung doan duong da ve toi (khong hien san)
+var lo=document.getElementById("loPhim");
+gsap.set(lo, {{opacity:0}});
+tl.to(lo, {{opacity:0.42, duration:0.9, ease:"steps(12)"}}, 0.35);
 // 3. may quay roi xuong, cuon phim quay theo nac
 tl.fromTo("#may", {{y:-420, opacity:0}}, {{y:0, opacity:1, duration:0.55, ease:"steps(8)"}}, 0.35);
 tl.to("#cuon1", {{rotation:-360, transformOrigin:"center", duration:1.6, repeat:-1, ease:"steps(14)"}}, 0.9);
