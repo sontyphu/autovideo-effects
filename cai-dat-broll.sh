@@ -20,12 +20,16 @@ if [ ${#thieu[@]} -gt 0 ]; then
 fi
 echo "Node.js, ffmpeg, ffprobe: DA CO"
 
-PY=""
+PY=""; PY_ARGS=""
 for t in python3 python; do
   if command -v "$t" >/dev/null 2>&1 && "$t" -c 'import sys; sys.exit(0 if sys.version_info[0]==3 else 1)' 2>/dev/null; then
     PY="$t"; break
   fi
 done
+if [ -z "$PY" ] && command -v uv >/dev/null 2>&1; then
+  PY="uv"; PY_ARGS="run python"
+  echo "Khong goi duoc python truc tiep - dung Python cua uv"
+fi
 if [ -z "$PY" ]; then
   echo "THIEU Python 3. Cai bang: brew install python"
   exit 1
@@ -59,7 +63,7 @@ echo "Da dat skill vao: $DICH"
 echo ""
 echo "Dang lam thu mot canh tram de kiem (lan dau Chrome ngam co the tai them, hoi lau)..."
 THU="${TMPDIR:-/tmp}/broll-thu.mp4"
-"$PY" "$DICH/scripts/lam_broll.py" --loi "kiem tra cai dat" --giay 2 --ra "$THU" >/dev/null
+"$PY" $PY_ARGS "$DICH/scripts/lam_broll.py" --loi "kiem tra cai dat" --giay 2 --ra "$THU" >/dev/null
 
 if [ -f "$THU" ]; then
   KHUNG=$(ffprobe -v error -select_streams v:0 -count_frames -show_entries stream=nb_read_frames -of csv=p=0 "$THU")

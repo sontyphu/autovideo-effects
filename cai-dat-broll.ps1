@@ -19,13 +19,22 @@ if ($thieu.Count -gt 0) {
 }
 Write-Host "Node.js, ffmpeg, ffprobe: DA CO"
 
-# Python (de chay cong cu)
-$py = $null
+# Python. Luu y: Windows co "shim" gia cua Microsoft Store lam lenh python bao loi
+# du may da co Python -> phai thu ca uv (lop da cai o buoi 2 de dung yt-dlp).
+$py = $null; $pyArgs = @()
 foreach ($ten in @('python', 'python3')) {
   try { $v = & $ten --version 2>&1 | Out-String; if ($v -match 'Python 3') { $py = $ten; break } } catch {}
 }
 if (-not $py) {
+  try {
+    $null = & uv --version 2>$null
+    $py = 'uv'; $pyArgs = @('run', 'python')
+    Write-Host "Khong goi duoc python truc tiep - dung Python cua uv"
+  } catch {}
+}
+if (-not $py) {
   Write-Host "THIEU Python 3. Cai tai https://python.org (nho tick 'Add to PATH') roi chay lai."
+  Write-Host "Hoac cai uv: irm https://astral.sh/uv/install.ps1 | iex"
   exit 1
 }
 Write-Host "Python 3: DA CO"
@@ -61,7 +70,7 @@ Write-Host "Da dat skill vao: $dich"
 Write-Host ""
 Write-Host "Dang lam thu mot canh tram de kiem (lan dau Chrome ngam co the tai them, hoi lau)..."
 $thu = Join-Path $env:TEMP 'broll-thu.mp4'
-& $py (Join-Path $dich 'scripts\lam_broll.py') --loi "kiem tra cai dat" --giay 2 --ra $thu | Out-Null
+& $py @pyArgs (Join-Path $dich 'scripts\lam_broll.py') --loi "kiem tra cai dat" --giay 2 --ra $thu | Out-Null
 
 if (Test-Path $thu) {
   $khung = & ffprobe -v error -select_streams v:0 -count_frames -show_entries stream=nb_read_frames -of csv=p=0 $thu
