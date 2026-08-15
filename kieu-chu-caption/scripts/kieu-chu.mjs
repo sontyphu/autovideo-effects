@@ -20,7 +20,7 @@ function rgba(hex, doDam = 1) {
   return `rgba(${r},${g},${b},${doDam})`;
 }
 
-// ASS dùng &HAABBGGRR — AA: 00 = đặc, FF = trong suốt hoàn toàn
+// ASS dùng &HAABBGGRR - AA: 00 = đặc, FF = trong suốt hoàn toàn
 function mauASS(hex, doDam = 1) {
   const { r, g, b } = docMau(hex);
   const a = Math.round((1 - doDam) * 255);
@@ -48,7 +48,7 @@ const MAC_DINH = {
   bop_ngang: 100,
   mau_chu: '#FFFFFF',
   gradient: null, // { tu, den, goc }
-  vien: [], // [{ day, mau }] — xếp từ trong ra ngoài
+  vien: [], // [{ day, mau }] - xếp từ trong ra ngoài
   bong: null, // { x, y, nhoe, mau, do_dam }
   phat_sang: null, // { ban_kinh, mau, do_dam }
   nen: null, // { mau, do_dam, dem, bo_goc }
@@ -204,7 +204,7 @@ export function raCSSLopDuoi(k) {
 }
 
 // ================= ĐÍCH 1: HTML / CSS =================
-// Trung thực nhất — làm được mọi hiệu ứng.
+// Trung thực nhất - làm được mọi hiệu ứng.
 export function raCSS(k, cheDo) {
   const c = cheDo || k.hoa_thuong || 'nguyen';
   const d = [];

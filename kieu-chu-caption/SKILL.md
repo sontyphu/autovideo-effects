@@ -88,7 +88,7 @@ trên phần tổng, gọi là **độ trùng**.
 | Độ trùng | Nghĩa |
 |---|---|
 | trên 85% | khớp tốt, dùng được |
-| 70–85% | font gần giống, chưa đúng bản |
+| 70-85% | font gần giống, chưa đúng bản |
 | dưới 70% | sai font, phải đổi |
 
 Máy còn chỉ thẳng chỗ sai: cỡ chữ to/nhỏ bao nhiêu · bề ngang lệch riêng (dấu hiệu
