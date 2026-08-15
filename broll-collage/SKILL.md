@@ -1,6 +1,6 @@
 ---
 name: dung-broll-collage
-description: "CÔNG CỤ SINH CẢNH TRÁM B-ROLL phong cách cắt dán giấy (paper-collage stop-motion) để chèn vào video chính. Nhận câu thoại + độ dài + tỉ lệ khung → trả về file mp4 câm khớp ĐÚNG TỪNG KHUNG HÌNH; skill/agent biên tập tự ghép vào. Chạy 100% bằng Remotion trên máy, 0 đồng mỗi cảnh, KHÔNG gọi API trả phí (Gemini/Veo/OpenAI). Dùng skill này khi: skill hay agent biên tập video cần cảnh trám mà kho cảnh quay không có gì hợp (câu nói trừu tượng: quy trình, tiền bạc, thời gian, AI, sai lầm); hoặc anh Sơn nói 'làm b-roll cho đoạn này', 'trám cảnh vào giây X', 'cần cảnh minh hoạ cho câu này', 'sinh b-roll collage', 'làm cảnh chèn kiểu cắt dán'. Việc nối tiếp: 'đổi màu cảnh trám', 'làm lại dài hơn', 'đổi sang khung ngang' - đều dùng skill này. KHÔNG dùng để: tìm chỗ nào cần b-roll (việc của skill biên tập chính), ghép cảnh vào video (thay-ghep-canh-video / video-use), thay cảnh xấu đã có (thay-ghep-canh-video), dựng CẢ MỘT video tài liệu giấy cắt dán có lời dẫn và phụ đề (lam-video-vox), đắp chữ/hiệu ứng lên talking-head (hieu-ung-video-thuong-hieu), dựng animation thương hiệu (hyperframes)."
+description: "CÔNG CỤ SINH CẢNH TRÁM B-ROLL phong cách cắt dán giấy (paper-collage stop-motion) để chèn vào video chính. Nhận câu thoại + độ dài + tỉ lệ khung → trả về file mp4 câm khớp ĐÚNG TỪNG KHUNG HÌNH; skill/agent biên tập tự ghép vào. Chạy bằng HyperFrames đã có sẵn trên máy, 0 đồng mỗi cảnh, KHÔNG cài thêm gì, KHÔNG gọi API trả phí (Gemini/Veo/OpenAI). Dùng skill này khi: skill hay agent biên tập video cần cảnh trám mà kho cảnh quay không có gì hợp (câu nói trừu tượng: quy trình, tiền bạc, thời gian, AI, sai lầm); hoặc anh Sơn nói 'làm b-roll cho đoạn này', 'trám cảnh vào giây X', 'cần cảnh minh hoạ cho câu này', 'sinh b-roll collage', 'làm cảnh chèn kiểu cắt dán'. Việc nối tiếp: 'đổi màu cảnh trám', 'làm lại dài hơn', 'đổi sang khung ngang' - đều dùng skill này. KHÔNG dùng để: tìm chỗ nào cần b-roll (việc của skill biên tập chính), ghép cảnh vào video (thay-ghep-canh-video / video-use), thay cảnh xấu đã có (thay-ghep-canh-video), dựng CẢ MỘT video tài liệu giấy cắt dán có lời dẫn và phụ đề (lam-video-vox), đắp chữ/hiệu ứng lên talking-head (hieu-ung-video-thuong-hieu), dựng animation thương hiệu (hyperframes)."
 ---
 
 # Công cụ sinh cảnh trám B-roll cắt dán giấy
@@ -23,6 +23,12 @@ Skill/agent biên tập chính            dung-broll-collage (skill này)
 
 **Skill này CHỈ:** nhận yêu cầu → trả cảnh trám đạt chuẩn ghép.
 
+## Chạy bằng gì
+
+**HyperFrames** - cùng cỗ máy lớp đang dạy (cài từ buổi 3), cùng cỗ máy `lam-video-vox` dùng. **Không cài thêm thư viện nào.** Composition là một file HTML: hình vẽ bằng SVG, làm động bằng GSAP, render bằng `npx hyperframes render`.
+
+Cần có: `node` · `ffmpeg` + `ffprobe` · HyperFrames CLI (`npx hyperframes`).
+
 ## Ba luật cứng (sai là hỏng khi ghép)
 
 1. **Số khung = làm tròn(số giây × fps).** Skill chính cần 3,7 giây thì trả đúng 3,7 giây - không làm tròn lên 4, không mặc định 5 giây. Ghép lệch là hỏng tiếng.
@@ -41,15 +47,16 @@ Skill/agent biên tập chính            dung-broll-collage (skill này)
 | `khung` | Không | `9:16` (mặc định) · `16:9` · `1:1` · `4:5` |
 | `fps` | Nên có | Mặc định 30 - phải khớp video chính |
 | `mau_nen` / `mau_nhan` / `mau_chot` | Không | Ép màu; bỏ trống thì tự chọn theo nghĩa câu nói |
-| `canh` | Không | Tên ẩn dụ dựng sẵn (mặc định `quay-cat-xuat-ban`) |
+| `canh` | Không | Ép ẩn dụ (xem `--list-canh`); bỏ trống thì tự chọn |
 | `ra` | Không | Đường dẫn file ra |
 
 **Skill này trả về** - JSON in ra màn hình, skill chính đọc để ghép:
 
 ```json
-{"so_canh": 2, "canh": [
-  {"stt":1, "file":"...\\broll-01.mp4", "giay":3.2, "so_khung":96,
-   "fps":30, "khung":"9:16", "mau_nen":"#1b7d70", "bat_dau":12.4, "ket_thuc":15.6}
+{"so_canh": 2, "dat_chuan_het": true, "canh": [
+  {"stt":1, "file":"...\\broll-01.mp4", "giay":3.2, "so_khung":80,
+   "fps":25, "khung":"16:9", "canh":"thoi-gian-troi", "dat_chuan":true,
+   "mau_nen":"#1b7d70", "bat_dau":10, "ket_thuc":13.2}
 ]}
 ```
 
@@ -70,30 +77,23 @@ Xem danh sách bằng `--list-canh`. Không ép thì công cụ **tự chọn th
 ## Cách gọi
 
 ```bash
-# Cả loạt - KHUYẾN DÙNG: nhanh hơn và tự tránh trùng cảnh/màu giữa các đoạn
-python scripts/lam_broll.py --bang yeucau.json --thu-muc "E:/Video-Projects/<dự-án>/broll" --fps 30
+# Cả loạt - KHUYẾN DÙNG: tự tránh trùng cảnh và màu giữa các đoạn
+python scripts/lam_broll.py --bang yeucau.json --thu-muc "<thư-mục>/broll" --fps 30
 
 # Một cảnh lẻ
 python scripts/lam_broll.py --loi "AI cắt ghép thay bạn" --bat-dau 12.4 --ket-thuc 15.6 \
-    --khung 16:9 --fps 30 --ra "E:/Video-Projects/<dự-án>/broll/b1.mp4"
+    --khung 16:9 --fps 30 --ra "<thư-mục>/broll/b1.mp4"
 
-# Duyệt RẺ trước khi render: chỉ ra 1 ảnh tĩnh khung cuối (~13 giây)
+# Duyệt RẺ trước khi render: chỉ ra 1 ảnh tĩnh (~15 giây)
 python scripts/lam_broll.py --loi "..." --giay 3 --ra out/a.mp4 --xem-truoc
 
-# Xem có những ẩn dụ nào / ép dùng một ẩn dụ cụ thể
+# Xem có ẩn dụ nào / ép dùng một ẩn dụ cụ thể
 python scripts/lam_broll.py --list-canh
 python scripts/lam_broll.py --loi "..." --giay 3 --canh tang-truong --ra out/a.mp4
 
 # Bám tông màu video chính (trích khung tại mốc lấy màu)
 python scripts/lam_broll.py --bang yeucau.json --thu-muc out --tu-video "video-chinh.mp4"
 ```
-
-## Tự bảo vệ (khỏi phải nhớ)
-
-1. **Tự đồng bộ khuôn.** Sửa khuôn trong skill xong không cần nhớ lệnh gì - công cụ so vân tay, khác là tự chép sang xưởng. *(Trước đây phải gọi `--dong-bo`; quên là render bằng khuôn cũ mà không báo lỗi.)*
-2. **Tự kiểm mọi file** bằng ffprobe ngay sau render: đúng số khung chưa · đúng fps chưa · đúng kích thước chưa · có lẫn tiếng không. Lệch thì ghi vào `canh_bao`, đặt `dat_chuan: false`, và **thoát với mã lỗi 2** - skill chính biết mà không ghép bừa vào video.
-3. **Tự gỡ luồng tiếng.** Remotion hay nhét luồng tiếng rỗng vào mp4; công cụ tự gỡ (chép luồng hình, không mã hoá lại).
-4. **Báo lỗi rõ**: thiếu Node/npm, tên cảnh sai, thiếu độ dài - đều nói thẳng phải làm gì, không để chết lặng.
 
 File `yeucau.json`:
 ```json
@@ -103,19 +103,48 @@ File `yeucau.json`:
 ]
 ```
 
-**Xưởng dùng chung:** lần đầu chạy tự dựng xưởng và `npm install` (chỉ chậm lần này), các lần sau tái dùng. Chỗ đặt xưởng tự chọn theo máy: máy có ổ E thì `E:\Video-Projects\_broll-collage-xuong`, không có thì trong thư mục người dùng. Muốn đặt chỗ khác thì set biến `BROLL_XUONG`.
+## Tự bảo vệ (khỏi phải nhớ)
+
+1. **Tự kiểm mọi file** bằng ffprobe ngay sau render: đúng số khung chưa · đúng fps chưa · đúng kích thước chưa · có lẫn tiếng không. Lệch thì ghi vào `canh_bao`, đặt `dat_chuan: false`, và **thoát với mã lỗi 2** - skill chính biết mà không ghép bừa vào video.
+2. **Tự gỡ luồng tiếng** nếu lọt vào (chép luồng hình, không mã hoá lại).
+3. **Không để lại rác**: mỗi lần chạy dựng một dự án HyperFrames trong thư mục tạm rồi xoá sạch.
+4. **Báo lỗi rõ**: thiếu Node/ffmpeg, tên cảnh sai, thiếu độ dài - đều nói thẳng phải làm gì.
+5. **Chịu được tiếng Việt có dấu** trong đường dẫn và lời thoại (đã ép UTF-8; trước đây lỗi này làm chết script *sau khi* đã render xong).
+
+## Luật phong cách (giữ chất collage)
+
+1. **3-6 vật chính**, mỗi vật một vai trong mạch - không nhồi.
+2. **Ghép từ khung trống**: mảnh trượt/rơi/bật vào. Không fade, không zoom trôi.
+3. **Nhịp stop-motion**: mọi tween dùng `ease:"steps(n)"` - giật nấc như chụp từng tấm giấy, không mượt kiểu máy tính. Mỗi mảnh còn có nhịp rung tay (`js_rung`).
+4. **Mọi mảnh là giấy**: bóng đổ mềm, mép rách (`torn`), vật "ảnh" dùng hoạ tiết `ht` (halftone).
+5. **Kể một mạch** theo thứ tự ghép, mảnh chốt vào cuối cùng có nhấn.
+6. **Không chữ, không logo** trong hình - chữ là việc của phụ đề, đắp sau.
+7. **Cuối cảnh vẫn động nhẹ**: bob, nháy, lấp lánh. Không đứng hình chết.
+
+## Bố cục thích ứng theo khung (đã trả giá)
+
+Hình gốc vẽ trên hệ toạ độ dọc 1080×1920. **Không được cắt xén** để ra khung ngang - cắt là mất vật chính. Mỗi cảnh có **bộ toạ độ riêng** cho dọc / ngang / vuông, tự xếp lại các cụm:
+
+- **Dọc 9:16** - xếp trên → dưới.
+- **Ngang 16:9** - xếp trái → phải; cảnh `quay-cat-xuat-ban` có đường phim chảy ngang riêng để không đứt mạch.
+- **Vuông 1:1** - dồn gọn vào giữa.
+
+## Hai bẫy kỹ thuật đã dính (đọc trước khi sửa cảnh)
+
+1. **GSAP ghi đè `transform` của SVG.** Nếu để GSAP làm động thẳng vào thẻ đã có `transform="translate(...)"`, nó xoá translate đó và mảnh văng khỏi vị trí. **Luôn bọc hai lớp** bằng hàm `mieng()`: lớp ngoài giữ vị trí, lớp trong mang `id` để GSAP đụng vào.
+2. **Một thẻ không thể vừa `filter=` vừa `style="filter:"`** - cái sau nuốt cái trước (mất mép giấy rách). Tách hai lớp: ngoài đổ bóng, trong làm rách.
+
+Ngoài ra: mảnh nào `mieng()` đặt `opacity="0"` thì animation **phải bật lại `opacity:1`**, và tâm xoay dùng `transformOrigin:"center"` (đừng dùng `svgOrigin` cho mảnh nằm trong nhóm đã dịch - tính sai).
 
 ## Thêm ẩn dụ mới (3 bước)
 
-1. Tạo `src/canh/<TenCanh>.tsx` - import chất liệu từ `../chatlieu` (`Piece`, `TamGiay`, `BanTay`, `usePop`, `HatNhan`, `Sao`), **đừng chép lại**.
-2. Đăng ký vào `DS_CANH` trong `src/Collage.tsx`.
+1. Viết một hàm trong `scripts/canh.py` theo đúng khuôn: nhận `(L, M)` → trả `(svg, js)`. Dùng lại `tam_giay()`, `mieng()`, `ban_tay()`, `js_rung()`, `defs()` - **đừng chép lại**.
+2. Đăng ký vào `DS_CANH` cuối file `canh.py`.
 3. Thêm một dòng từ khoá vào `BANG_CANH` trong `scripts/lam_broll.py`.
 
-Mỗi cảnh nhận `{ wide, square }` và tự xếp lại bố cục theo hướng khung.
+`L` cho biết khung ngang hay dọc (`L["wide"]`, `L["square"]`) để cảnh tự xếp bố cục; `M` là bộ màu đã chọn.
 
 ## Khi nào NÊN dùng cảnh trám collage
-
-Skill chính cân nhắc trước khi gọi - collage hợp với **câu nói trừu tượng, không quay được**:
 
 | Hợp | Không hợp |
 |---|---|
@@ -126,58 +155,9 @@ Skill chính cân nhắc trước khi gọi - collage hợp với **câu nói tr
 
 Có cảnh quay thật hợp thì **luôn ưu tiên cảnh thật**. Collage là phương án khi kho cảnh bí.
 
-## Màu tự chọn theo nghĩa câu nói
-
-Skill chính không ép màu thì công cụ tự chọn, và **tự tránh trùng màu với cảnh liền trước** (chèn 5 cảnh cùng tông teal là rối mắt):
-
-| Nghĩa câu nói | Nền |
-|---|---|
-| quy trình, hệ thống, dựng video | teal `#1b7d70` |
-| sai lầm, cảnh báo, mất mát | đỏ gạch `#b3402e` |
-| tiền, doanh thu, khách hàng, bán | mustard `#c9962e` |
-| AI, công nghệ, tự động, tương lai | tím than `#3b3560` |
-
-## Luật phong cách (giữ chất collage)
-
-1. **3–6 vật chính**, mỗi vật một vai trong mạch - không nhồi.
-2. **Ghép từ khung trống**: mảnh trượt/rơi/bật vào bằng lò xo. Không fade, không zoom trôi.
-3. **Nhịp stop-motion**: thời gian lượng hoá 15fps + rung tay từng mảnh - có sẵn trong khuôn (`useQFrame`, `jit`), đừng gỡ.
-4. **Mọi mảnh là giấy**: bóng đổ mềm, mép rách (`torn`), vật "ảnh" dùng pattern `halftone`.
-5. **Kể một mạch**: mặc định *máy quay → phim chảy ra → kéo cắt đứt → tay đặt nút play* (= quay → dựng → xuất bản).
-6. **Không chữ, không logo** trong hình - chữ là việc của skill chính (phụ đề đặt sau cùng).
-7. **Cuối cảnh vẫn động nhẹ**: bob, lấp lánh, đèn REC nháy. Không đứng hình chết.
-
-## Bố cục thích ứng theo khung (đã trả giá)
-
-Hình gốc vẽ trên hệ toạ độ dọc 1080×1920. **Không được cắt xén** để ra khung ngang - cắt là mất máy quay và nút play (đã dính lỗi này khi làm). Khuôn xếp lại các cụm theo hướng khung:
-
-- **Dọc 9:16** - máy quay trên, phim chảy xuống, dải phim + kéo dưới.
-- **Ngang 16:9** - máy quay trái, **phim chảy sóng ngang sang phải** (bộ đường cong riêng `SEG*_W`), dải phim + kéo giữa phải, nút play dưới phải.
-- **Vuông 1:1** - thu gọn cụm chính, dồn vào giữa.
-
-Sửa bố cục ở biến `L` trong `Collage.tsx`.
-
-## Tự kiểm trước khi trả kết quả
-
-Bốn mục đầu **công cụ tự làm** rồi (xem `dat_chuan_het` trong bảng kê); ba mục cuối cần mắt người:
-
-```
-[x] Số khung = làm tròn(giây × fps) - máy đo bằng ffprobe
-[x] fps + kích thước khung đúng yêu cầu - máy đo
-[x] File câm, không luồng tiếng - máy đo và tự gỡ
-[x] Khuôn mới nhất đã sang xưởng - máy so vân tay
-[ ] Đã xem khung QA: không mảnh nào cắt cụt / đè lên vật chính
-[ ] Nhiều cảnh một loạt: ẩn dụ và màu không lặp nhau liên tiếp
-[ ] Ẩn dụ hợp nghĩa câu thoại (máy đoán theo từ khoá, người soi lại)
-```
-
-## Nâng cấp khi có ngân sách ảnh AI
-
-Muốn chất "ảnh chụp thật cắt dán" như tool gốc `gbro-collage-broll`: dùng `tao-anh-ai` (OpenAI) sinh từng vật PNG **nền trong suốt, halftone đen trắng**, rồi thay `<image>` vào chỗ mảnh vector - chuyển động giữ nguyên. Chỉ làm khi key còn credit.
-
 ## Đừng lẫn với `lam-video-vox`
 
-Hai skill cùng phong cách giấy cắt dán nhưng **khác hẳn vai**:
+Hai skill cùng chạy HyperFrames, cùng phong cách giấy cắt dán, nhưng **khác hẳn vai**:
 
 | | `dung-broll-collage` (skill này) | `lam-video-vox` |
 |---|---|---|
@@ -185,8 +165,21 @@ Hai skill cùng phong cách giấy cắt dán nhưng **khác hẳn vai**:
 | Ai dùng | skill biên tập gọi nó | anh Sơn gọi trực tiếp |
 | Có tiếng | không bao giờ | có giọng đọc |
 
-Cần một mẩu để trám vào chỗ trống → skill này. Cần cả một phóng sự → `lam-video-vox`.
+## Tự kiểm trước khi trả kết quả
+
+Năm mục đầu **công cụ tự làm** (xem `dat_chuan_het`); ba mục cuối cần mắt người:
+
+```
+[x] Số khung = làm tròn(giây × fps) - máy đo bằng ffprobe
+[x] fps + kích thước khung đúng yêu cầu - máy đo
+[x] File câm, không luồng tiếng - máy đo và tự gỡ
+[x] Chịu được đường dẫn tiếng Việt có dấu
+[x] Xoá sạch dự án tạm sau khi render
+[ ] Đã xem khung QA: không mảnh nào cắt cụt / đè lên vật chính
+[ ] Nhiều cảnh một loạt: ẩn dụ và màu không lặp nhau liên tiếp
+[ ] Ẩn dụ hợp nghĩa câu thoại (máy đoán theo từ khoá, người soi lại)
+```
 
 ## Gốc gác
 
-Học cơ chế từ tool mã mở `gbro-collage-broll` (pyang5166) - nhưng tool gốc trả tiền Gemini Omni Flash mỗi clip và chỉ đẻ clip lẻ 5 giây. Bản này thay engine bằng Remotion (0 đồng, độ dài tuỳ ý, khớp từng khung) và đặt đúng vai công cụ trong dây chuyền biên tập. Chốt 15/08/2026.
+Học cơ chế từ tool mã mở `gbro-collage-broll` (pyang5166) - tool gốc trả tiền Gemini Omni Flash mỗi clip và chỉ đẻ clip lẻ 5 giây. Bản này thay engine bằng HyperFrames (0 đồng, độ dài tuỳ ý, khớp từng khung) và đặt đúng vai công cụ trong dây chuyền biên tập. Dựng bằng Remotion trước, chuyển sang HyperFrames ngày 15/08/2026 để cả hệ chỉ nuôi một cỗ máy đồ hoạ động.
