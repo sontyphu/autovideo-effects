@@ -30,9 +30,12 @@ Write-Host "      Node.js, ffmpeg, ffprobe: đã có"
 # Python. Windows hay co "shim" gia cua Microsoft Store lam lenh python bao loi
 # du may da co Python -> thu ca uv (lop da cai o buoi 2 de dung yt-dlp).
 $py = $null; $pyArgs = @()
+$cuPy = $ErrorActionPreference
+$ErrorActionPreference = 'Continue'
 foreach ($ten in @('python', 'python3')) {
-  try { $v = & $ten --version 2>&1 | Out-String; if ($v -match 'Python 3') { $py = $ten; break } } catch {}
+  try { $v = (& $ten --version) | Out-String; if ($v -match 'Python 3') { $py = $ten; break } } catch {}
 }
+$ErrorActionPreference = $cuPy
 if (-not $py) {
   try {
     $null = & uv --version 2>$null
@@ -50,7 +53,10 @@ Write-Host "      Python: đã có"
 
 # HyperFrames - cai o bai 01 cua nhom nay
 $hf = $false
-try { $hfv = & npx hyperframes --version 2>&1 | Out-String; if ($hfv -match '\d+\.\d+') { $hf = $true } } catch {}
+$cuHf = $ErrorActionPreference
+$ErrorActionPreference = 'Continue'
+try { $hfv = (& npx hyperframes --version) | Out-String; if ($hfv -match '\d+\.\d+') { $hf = $true } } catch {}
+$ErrorActionPreference = $cuHf
 if (-not $hf) {
   Write-Host ""
   Write-Host "  Máy bạn chưa có HyperFrames - đây là phần dựng hình của xưởng."

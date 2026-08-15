@@ -1,6 +1,6 @@
 ---
 name: dung-broll-collage
-description: "CÔNG CỤ SINH CẢNH TRÁM B-ROLL phong cách cắt dán giấy (paper-collage stop-motion) để chèn vào video chính. Nhận câu thoại + độ dài + tỉ lệ khung → trả về file mp4 câm khớp ĐÚNG TỪNG KHUNG HÌNH; skill/agent biên tập tự ghép vào. Chạy bằng HyperFrames đã có sẵn trên máy, 0 đồng mỗi cảnh, KHÔNG cài thêm gì, KHÔNG gọi API trả phí (Gemini/Veo/OpenAI). Dùng skill này khi: skill hay agent biên tập video cần cảnh trám mà kho cảnh quay không có gì hợp (câu nói trừu tượng: quy trình, tiền bạc, thời gian, AI, sai lầm); hoặc anh Sơn nói 'làm b-roll cho đoạn này', 'trám cảnh vào giây X', 'cần cảnh minh hoạ cho câu này', 'sinh b-roll collage', 'làm cảnh chèn kiểu cắt dán'. Việc nối tiếp: 'đổi màu cảnh trám', 'làm lại dài hơn', 'đổi sang khung ngang' - đều dùng skill này. KHÔNG dùng để: tìm chỗ nào cần b-roll (việc của skill biên tập chính), ghép cảnh vào video (thay-ghep-canh-video / video-use), thay cảnh xấu đã có (thay-ghep-canh-video), dựng CẢ MỘT video tài liệu giấy cắt dán có lời dẫn và phụ đề (lam-video-vox), đắp chữ/hiệu ứng lên talking-head (hieu-ung-video-thuong-hieu), dựng animation thương hiệu (hyperframes)."
+description: "CÔNG CỤ SINH CẢNH TRÁM B-ROLL phong cách cắt dán giấy (paper-collage stop-motion) để chèn vào video chính. Nhận câu thoại + độ dài + tỉ lệ khung → trả về file mp4 câm khớp ĐÚNG TỪNG KHUNG HÌNH; skill/agent biên tập tự ghép vào. Dựng hình ngay trên máy nên 0 đồng mỗi cảnh, không cài thêm gì, không tốn phí dịch vụ bên ngoài, và chạy được cả khi máy không có mạng. Dùng skill này khi: skill hay agent biên tập video cần cảnh trám mà kho cảnh quay không có gì hợp (câu nói trừu tượng: quy trình, tiền bạc, thời gian, AI, sai lầm); hoặc người dùng nói 'làm b-roll cho đoạn này', 'trám cảnh vào giây X', 'cần cảnh minh hoạ cho câu này', 'sinh b-roll collage', 'làm cảnh chèn kiểu cắt dán'. Việc nối tiếp: 'đổi màu cảnh trám', 'làm lại dài hơn', 'đổi sang khung ngang' - đều dùng skill này. KHÔNG dùng để: tìm chỗ nào trong video cần chèn b-roll (việc của trợ lý biên tập), ghép cảnh vào video, thay cảnh xấu đã quay, dựng cả một video hoàn chỉnh có lời dẫn, hay đắp chữ và hiệu ứng lên video quay người thật."
 ---
 
 # Công cụ sinh cảnh trám B-roll cắt dán giấy
@@ -35,7 +35,7 @@ Skill/agent biên tập chính            dung-broll-collage (skill này)
 
 ## Chạy bằng gì
 
-**HyperFrames** - cùng cỗ máy lớp đang dạy (cài từ buổi 3), cùng cỗ máy `lam-video-vox` dùng. **Không cài thêm thư viện nào.** Composition là một file HTML: hình vẽ bằng SVG, làm động bằng GSAP, render bằng `npx hyperframes render`.
+**HyperFrames** - đúng cỗ máy dựng hình đã cài ở bài 01 của nhóm này. **Không cài thêm thư viện nào.** Composition là một file HTML: hình vẽ bằng SVG, làm động bằng GSAP, render bằng `npx hyperframes render`.
 
 Cần có: `node` · `ffmpeg` + `ffprobe` · HyperFrames CLI (`npx hyperframes`).
 
@@ -131,7 +131,7 @@ File `yeucau.json`:
 6. **Không chữ, không logo** trong hình - chữ là việc của phụ đề, đắp sau.
 7. **Cuối cảnh vẫn động nhẹ**: bob, nháy, lấp lánh. Không đứng hình chết.
 
-## Bố cục thích ứng theo khung (đã trả giá)
+## Bố cục thích ứng theo khung
 
 Hình gốc vẽ trên hệ toạ độ dọc 1080×1920. **Không được cắt xén** để ra khung ngang - cắt là mất vật chính. Mỗi cảnh có **bộ toạ độ riêng** cho dọc / ngang / vuông, tự xếp lại các cụm:
 
@@ -139,7 +139,7 @@ Hình gốc vẽ trên hệ toạ độ dọc 1080×1920. **Không được cắ
 - **Ngang 16:9** - xếp trái → phải; cảnh `quay-cat-xuat-ban` có đường phim chảy ngang riêng để không đứt mạch.
 - **Vuông 1:1** - dồn gọn vào giữa.
 
-## Hai bẫy kỹ thuật đã dính (đọc trước khi sửa cảnh)
+## Hai bẫy kỹ thuật khi sửa cảnh
 
 1. **GSAP ghi đè `transform` của SVG.** Nếu để GSAP làm động thẳng vào thẻ đã có `transform="translate(...)"`, nó xoá translate đó và mảnh văng khỏi vị trí. **Luôn bọc hai lớp** bằng hàm `mieng()`: lớp ngoài giữ vị trí, lớp trong mang `id` để GSAP đụng vào.
 2. **Một thẻ không thể vừa `filter=` vừa `style="filter:"`** - cái sau nuốt cái trước (mất mép giấy rách). Tách hai lớp: ngoài đổ bóng, trong làm rách.
@@ -165,15 +165,6 @@ Ngoài ra: mảnh nào `mieng()` đặt `opacity="0"` thì animation **phải b�
 
 Có cảnh quay thật hợp thì **luôn ưu tiên cảnh thật**. Collage là phương án khi kho cảnh bí.
 
-## Đừng lẫn với `lam-video-vox`
-
-Hai skill cùng chạy HyperFrames, cùng phong cách giấy cắt dán, nhưng **khác hẳn vai**:
-
-| | `dung-broll-collage` (skill này) | `lam-video-vox` |
-|---|---|---|
-| Ra cái gì | **một mẩu cảnh câm** vài giây, để chèn vào video khác | **cả một video hoàn chỉnh** có lời dẫn, nhạc, phụ đề |
-| Ai dùng | skill biên tập gọi nó | anh Sơn gọi trực tiếp |
-| Có tiếng | không bao giờ | có giọng đọc |
 
 ## Tự kiểm trước khi trả kết quả
 
@@ -190,6 +181,8 @@ Năm mục đầu **công cụ tự làm** (xem `dat_chuan_het`); ba mục cuố
 [ ] Ẩn dụ hợp nghĩa câu thoại (máy đoán theo từ khoá, người soi lại)
 ```
 
-## Gốc gác
+## Ghi chú
 
-Học cơ chế từ tool mã mở `gbro-collage-broll` (pyang5166) - tool gốc trả tiền Gemini Omni Flash mỗi clip và chỉ đẻ clip lẻ 5 giây. Bản này thay engine bằng HyperFrames (0 đồng, độ dài tuỳ ý, khớp từng khung) và đặt đúng vai công cụ trong dây chuyền biên tập. Dựng bằng Remotion trước, chuyển sang HyperFrames ngày 15/08/2026 để cả hệ chỉ nuôi một cỗ máy đồ hoạ động.
+Phong cách cắt dán giấy này học từ một công cụ mã nguồn mở cùng ý tưởng, nhưng bản
+gốc phải trả tiền cho dịch vụ dựng video bên ngoài mỗi lần làm. Bản này dựng hình
+ngay trên máy nên không tốn phí, độ dài tuỳ ý, và khớp đúng từng khung hình khi ghép.
