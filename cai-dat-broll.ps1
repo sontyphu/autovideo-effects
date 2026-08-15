@@ -54,7 +54,12 @@ $dich = Join-Path $env:USERPROFILE '.claude\skills\dung-broll-collage'
 $tam  = Join-Path $env:TEMP ('broll-' + [guid]::NewGuid().ToString('N').Substring(0,8))
 
 Write-Host "Dang tai xuong canh tram..."
-& git clone --depth 1 https://github.com/sontyphu/autovideo-effects.git $tam 2>&1 | Out-Null
+# git in tien trinh ra luong LOI -> PowerShell hieu nham la hong va dung giua chung.
+# Tam ha muc bao loi + dung --quiet, roi tu kiem bang su ton tai cua file.
+$cu = $ErrorActionPreference
+$ErrorActionPreference = 'Continue'
+& git clone --depth 1 --quiet https://github.com/sontyphu/autovideo-effects.git $tam | Out-Null
+$ErrorActionPreference = $cu
 $nguon = Join-Path $tam 'broll-collage'
 if (-not (Test-Path (Join-Path $nguon 'SKILL.md'))) {
   Write-Host "Tai khong duoc. Kiem tra mang roi thu lai."
