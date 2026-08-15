@@ -1,4 +1,4 @@
-# Bo cai KHO KIEU CHU PHU DE - Windows
+﻿# Bo cai KHO KIEU CHU PHU DE - Windows
 # Hoc vien KHONG chay tay file nay. Tro ly AI tu chay khi ban dan cau lenh cai.
 
 $ErrorActionPreference = 'Stop'
@@ -28,7 +28,12 @@ $dich = Join-Path $env:USERPROFILE '.claude\skills\tao-kieu-chu-caption'
 $tam  = Join-Path $env:TEMP ('kieuchu-' + [guid]::NewGuid().ToString('N').Substring(0,8))
 
 Write-Host "Dang tai bo cong cu..."
-& git clone --depth 1 https://github.com/sontyphu/autovideo-effects.git $tam 2>&1 | Out-Null
+# git in tien trinh ra luong LOI -> PowerShell hieu nham la hong va DUNG GIUA CHUNG.
+# Tam ha muc bao loi + dung --quiet, roi tu kiem bang su ton tai cua file.
+$cuKC = $ErrorActionPreference
+$ErrorActionPreference = 'Continue'
+& git clone --depth 1 --quiet https://github.com/sontyphu/autovideo-effects.git $tam | Out-Null
+$ErrorActionPreference = $cuKC
 $nguon = Join-Path $tam 'kieu-chu-caption'
 if (-not (Test-Path (Join-Path $nguon 'SKILL.md'))) {
   Write-Host "Tai khong duoc. Kiem tra mang roi thu lai."

@@ -44,6 +44,9 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, HERE)
 from canh import DS_CANH, defs  # noqa: E402
 
+# Thu vien lam dong nam NGAY TRONG skill -> chay duoc khi khong co mang.
+GSAP = os.path.normpath(os.path.join(HERE, "..", "vendor", "gsap.min.js"))
+
 KHUNG = {
     "9:16": (1080, 1920),
     "16:9": (1920, 1080),
@@ -173,9 +176,9 @@ def kiem_cong_cu():
         except Exception:
             thieu.append(ten)
     if thieu:
-        sys.exit(f"[loi] Thieu: {', '.join(thieu)}.\n"
-                 "      Node.js: https://nodejs.org | ffmpeg: https://ffmpeg.org\n"
-                 "      Skill nay chay bang HyperFrames nen bat buoc co Node.")
+        sys.exit("Máy chưa có: " + ", ".join(thieu) + ".\n"
+                 "Cài Node.js tại https://nodejs.org, ffmpeg tại https://ffmpeg.org\n"
+                 "rồi mở lại Claude Code và thử lại.")
 
 
 def dung_html(canh, giay, w, h, mau):
@@ -186,7 +189,7 @@ def dung_html(canh, giay, w, h, mau):
     svg, js = DS_CANH[canh](L, M)
     return f"""<!doctype html>
 <html lang="vi"><head><meta charset="UTF-8"/>
-<script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+<script src="gsap.min.js"></script>
 <style>
   body {{ margin:0; background:{M['bg']}; }}
   #root {{ position:relative; width:{w}px; height:{h}px; overflow:hidden; background:{M['bg']}; }}
@@ -269,9 +272,10 @@ def lam_mot(yc, fps, khung, thu_muc, idx, da_mau, da_canh, video_goc=None, xem_t
     elif "giay" in yc:
         giay = float(yc["giay"])
     else:
-        sys.exit(f"[loi] Dong {idx}: thieu do dai. Can 'bat_dau'+'ket_thuc' hoac 'giay'.")
+        sys.exit(f"[Cảnh {idx}] Chưa biết cảnh này dài bao nhiêu giây. "
+                 f"Hãy nói rõ độ dài, ví dụ: dài 3 giây.")
     if giay <= 0:
-        sys.exit(f"[loi] Dong {idx}: do dai phai > 0 (dang la {giay}).")
+        sys.exit(f"[Cảnh {idx}] Độ dài phải lớn hơn 0 giây (đang nhận {giay}).")
 
     f = int(yc.get("fps", fps))
     # LUAT CUNG: so khung = lam tron(giay x fps).
@@ -284,7 +288,8 @@ def lam_mot(yc, fps, khung, thu_muc, idx, da_mau, da_canh, video_goc=None, xem_t
 
     k = yc.get("khung", khung)
     if k not in KHUNG:
-        sys.exit(f"[loi] Dong {idx}: khung '{k}' khong ho tro. Chon: {', '.join(KHUNG)}")
+        sys.exit(f"[Cảnh {idx}] Không có khung hình '{k}'. "
+                 f"Chọn một trong: {', '.join(KHUNG)} (dọc, ngang, vuông).")
     w, h = KHUNG[k]
 
     # --- MAU ---
@@ -310,6 +315,12 @@ def lam_mot(yc, fps, khung, thu_muc, idx, da_mau, da_canh, video_goc=None, xem_t
     # --- DUNG DU AN TAM + RENDER BANG HYPERFRAMES ---
     duan = tempfile.mkdtemp(prefix="broll-")
     try:
+        # GSAP dat NGAY TRONG du an, khong tai tu mang: may khong mang hoac
+        # mang cham la hong ca ban render, ma loi kieu do rat kho doan.
+        if not os.path.isfile(GSAP):
+            sys.exit("Thiếu phần làm động của xưởng.\n"
+                     "Hãy cài lại xưởng bằng bộ cài của lớp là có.")
+        shutil.copy2(GSAP, os.path.join(duan, "gsap.min.js"))
         with open(os.path.join(duan, "index.html"), "w", encoding="utf-8") as fh:
             fh.write(dung_html(canh, round(giay_that, 4), w, h, mau))
 
@@ -327,7 +338,7 @@ def lam_mot(yc, fps, khung, thu_muc, idx, da_mau, da_canh, video_goc=None, xem_t
                 key=os.path.getmtime)
             if r.returncode != 0 or not ds_anh:
                 loi_txt = (r.stderr or r.stdout or b"").decode("utf-8", "ignore")[-700:]
-                sys.exit(f"[loi] Dong {idx}: chup anh xem truoc that bai.\n{loi_txt}")
+                sys.exit(f"[Cảnh {idx}] Không tạo được ảnh xem trước.\n{loi_txt}")
             shutil.copy2(ds_anh[-1], ten)
         else:
             cmd = ["npx", "hyperframes", "render", duan, "-o", ten,
@@ -335,7 +346,7 @@ def lam_mot(yc, fps, khung, thu_muc, idx, da_mau, da_canh, video_goc=None, xem_t
             r = subprocess.run(cmd, capture_output=True, shell=True, timeout=1800)
             if r.returncode != 0 or not os.path.exists(ten):
                 loi_txt = (r.stderr or r.stdout or b"").decode("utf-8", "ignore")[-700:]
-                sys.exit(f"[loi] Dong {idx}: render that bai.\n{loi_txt}")
+                sys.exit(f"[Cảnh {idx}] Không dựng được cảnh này.\n{loi_txt}")
     finally:
         shutil.rmtree(duan, ignore_errors=True)
 
@@ -360,7 +371,7 @@ def lam_mot(yc, fps, khung, thu_muc, idx, da_mau, da_canh, video_goc=None, xem_t
     else:
         canh_bao.append("khong do duoc bang ffprobe (thieu ffmpeg?)")
     for c in canh_bao:
-        print(f"  [!] Dong {idx}: {c}", file=sys.stderr)
+        print(f"  [Cảnh {idx}] {c}", file=sys.stderr)
 
     return {"stt": idx, "loi": loi, "file": ten,
             "giay": round(so_khung / f, 4), "so_khung": so_khung, "fps": f,
@@ -377,7 +388,9 @@ def main():
     p.add_argument("--bat-dau", type=float, help="Moc bat dau tren video chinh")
     p.add_argument("--ket-thuc", type=float, help="Moc ket thuc tren video chinh")
     p.add_argument("--fps", type=int, default=30, help="PHAI bang fps video chinh (mac dinh 30)")
-    p.add_argument("--khung", default="9:16", choices=list(KHUNG), help="Ti le khung")
+    # KHONG dung choices= : thu vien se bao loi bang tieng Anh kho hieu.
+    # Tu kiem o duoi de bao bang tieng Viet.
+    p.add_argument("--khung", default="9:16", help="Ti le khung: 9:16 | 16:9 | 1:1 | 4:5")
     p.add_argument("--ra", help="Duong dan file ra (che do 1 canh)")
     p.add_argument("--thu-muc", default="broll-out", help="Thu muc chua ca loat")
     p.add_argument("--tu-video", help="Video chinh: lay tong mau tai moc cho hop tone")
@@ -395,25 +408,30 @@ def main():
         print(f"\nMac dinh khi khong khop tu khoa nao: {CANH_MAC_DINH}")
         return
 
+    if a.khung not in KHUNG:
+        sys.exit(f"Không có khung hình '{a.khung}'.\n"
+                 "Chọn một trong: 9:16 (dọc, cho Reels/TikTok) · 16:9 (ngang, cho YouTube) · "
+                 "1:1 (vuông) · 4:5 (đứng, cho Facebook).")
+
     kiem_cong_cu()
 
     if a.bang:
         if not os.path.exists(a.bang):
-            sys.exit(f"[loi] Khong thay file --bang: {a.bang}")
+            sys.exit(f"Không tìm thấy file danh sách yêu cầu: {a.bang}")
         with open(a.bang, "r", encoding="utf-8") as f:
             ds = json.load(f)
         if not isinstance(ds, list) or not ds:
-            sys.exit("[loi] File --bang phai la danh sach yeu cau, khong rong.")
+            sys.exit("File danh sách yêu cầu phải có ít nhất một cảnh.")
     else:
         if not a.loi:
-            sys.exit("[loi] Can --loi (che do 1 canh) hoac --bang (ca loat).")
+            sys.exit("Chưa có câu thoại. Hãy cho biết cảnh trám này minh hoạ cho câu nói nào.")
         mot = {"loi": a.loi}
         if a.bat_dau is not None and a.ket_thuc is not None:
             mot["bat_dau"], mot["ket_thuc"] = a.bat_dau, a.ket_thuc
         elif a.giay is not None:
             mot["giay"] = a.giay
         else:
-            sys.exit("[loi] Can --giay hoac ca --bat-dau va --ket-thuc.")
+            sys.exit("Chưa biết cảnh dài bao nhiêu. Cho biết số giây, hoặc mốc bắt đầu và kết thúc trên video chính.")
         for k, v in (("ra", a.ra), ("mau_nen", a.mau_nen), ("canh", a.canh)):
             if v:
                 mot[k] = v
@@ -422,8 +440,8 @@ def main():
     hop_le = [t for t, _ in BANG_CANH]
     for i, yc in enumerate(ds, 1):
         if yc.get("canh") and yc["canh"] not in hop_le:
-            sys.exit(f"[loi] Dong {i}: canh '{yc['canh']}' khong co. "
-                     f"Xem --list-canh. Co: {', '.join(hop_le)}")
+            sys.exit(f"[Cảnh {i}] Không có ẩn dụ tên '{yc['canh']}'.\n"
+                     f"Các ẩn dụ đang có: {', '.join(hop_le)}")
 
     ket_qua, da_mau, da_canh = [], [], []
     for i, yc in enumerate(ds, 1):
@@ -435,8 +453,8 @@ def main():
     print(json.dumps({"so_canh": len(ket_qua), "dat_chuan_het": not hong, "canh": ket_qua},
                      ensure_ascii=False, indent=2))
     if hong:
-        print(f"\n[!] {len(hong)} canh KHONG dat chuan - xem 'canh_bao'. "
-              "Dung ghep vao video cho toi khi sua xong.", file=sys.stderr)
+        print(f"\n{len(hong)} cảnh chưa đạt chuẩn - xem mục 'canh_bao'. "
+              "Đừng ghép vào video cho tới khi sửa xong.", file=sys.stderr)
         sys.exit(2)
 
 

@@ -5,6 +5,16 @@ description: "CÔNG CỤ SINH CẢNH TRÁM B-ROLL phong cách cắt dán giấy 
 
 # Công cụ sinh cảnh trám B-roll cắt dán giấy
 
+## Nói với người dùng thế nào (đọc trước tiên)
+
+Người dùng skill này là **học viên đang học làm video**, không phải người viết phần mềm. Mọi câu bạn nói ra màn hình phải theo đúng những điều sau:
+
+1. **Nói kết quả, đừng nói ruột máy.** Nói "đã dựng xong cảnh 3 giây, mở xem thử nhé" - **đừng** nói tên file, số dòng, tên thư viện, tên hàm, mã lỗi. Họ không cần và cũng không muốn biết.
+2. **Hỏng thì nói phải làm gì**, đừng chỉ mô tả chỗ hỏng. "Máy chưa có ffmpeg, cài tại ffmpeg.org rồi mở lại Claude Code" - chứ không phải "ffprobe returned exit code 127".
+3. **Đừng nhắc chuyện nội bộ của lớp**: không nói "báo thầy", "chờ vá ở kho gốc", "lỗi số 3 trong tài liệu", "kho upstream". Với học viên, công cụ này là thứ hoàn chỉnh - nhắc mấy chuyện đó chỉ làm họ thấy sản phẩm còn dở.
+4. **Nếu bạn phát hiện lỗi thật trong chính công cụ**: cứ tự sửa nếu sửa được, rồi nói gọn "chỗ này tôi vừa chỉnh cho chạy đúng". Còn nếu cần người làm skill xử lý, nói một câu: *"chỗ này nên báo lại nhóm lớp"* - không phân tích dài dòng ra màn hình.
+5. **Tiếng Việt có dấu, câu ngắn, không chen tiếng Anh** khi có từ tiếng Việt tương đương.
+
 ## Vai của skill này trong dây chuyền
 
 Đây là **công cụ hậu kỳ nhỏ, được gọi** - không phải skill tự chạy một mình.

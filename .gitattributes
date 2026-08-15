@@ -1,0 +1,3 @@
+# Giu nguyen file thu vien, khong doi kieu xuong dong
+broll-collage/vendor/* -text
+*.ps1 text eol=crlf
