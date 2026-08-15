@@ -274,9 +274,12 @@ def lam_mot(yc, fps, khung, thu_muc, idx, da_mau, da_canh, video_goc=None, xem_t
         sys.exit(f"[loi] Dong {idx}: do dai phai > 0 (dang la {giay}).")
 
     f = int(yc.get("fps", fps))
-    # LUAT CUNG: so khung = lam tron(giay x fps). Dung int(x+0.5) chu KHONG dung
-    # round() - round() cua Python lam tron ve so chan (62.5 -> 62), lech ngoai du doan.
-    so_khung = max(1, int(giay * f + 0.5))
+    # LUAT CUNG: so khung = lam tron(giay x fps).
+    # - KHONG dung round(): round() cua Python lam tron ve so chan (62.5 -> 62).
+    # - Cong them epsilon: so thap phan trong may tinh khong tron tuyet doi
+    #   (4.1*25 = 102.49999... chu khong phai 102.5) nen thieu epsilon thi
+    #   ket qua doi theo sai so, khong doan truoc duoc.
+    so_khung = max(1, int(giay * f + 0.5 + 1e-9))
     giay_that = so_khung / f          # HyperFrames tinh theo GIAY -> dua giay khop khung
 
     k = yc.get("khung", khung)

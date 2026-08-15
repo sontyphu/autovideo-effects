@@ -362,7 +362,8 @@ tl.from("#truc", {{scaleX:0, transformOrigin:"left center", duration:0.4, ease:"
 {''.join(f'tl.from("#cot{i}", {{scaleY:0, transformOrigin:"center bottom", duration:0.45, ease:"steps(6)"}}, {0.5+i*0.22:.2f});' for i in range(4))}
 // mui ten leo qua dinh cac cot
 var m=document.getElementById("muiten"), ml=m.getTotalLength();
-gsap.set(m, {{strokeDasharray:ml, strokeDashoffset:ml}});
+gsap.set(m, {{strokeDasharray:ml, strokeDashoffset:ml, opacity:0}});
+tl.set(m, {{opacity:1}}, 1.45);
 tl.to(m, {{strokeDashoffset:0, duration:0.9, ease:"steps(12)"}}, 1.45);
 tl.to("#dinhten", {{opacity:1, duration:0.1, ease:"steps(1)"}}, 2.3);
 // dong xu nay len
@@ -406,7 +407,8 @@ def may_lam_thay(L, M):
 </g>"""
 
     tia = "".join(
-        f'<rect class="tia" x="{rang[0][0]-7}" y="{rang[0][1]-rang[0][2]-58}" width="14" height="40" rx="7" fill="{M["cream"]}" opacity="0" transform="rotate({i*45+17} {rang[0][0]} {rang[0][1]})"/>'
+        # Mau NHAN (vang), khong dung mau kem: tia kem ve tren giay kem = vo hinh.
+        f'<rect class="tia" x="{rang[0][0]-8}" y="{rang[0][1]-rang[0][2]-64}" width="16" height="46" rx="8" fill="{M["accent"]}" opacity="0" transform="rotate({i*45+17} {rang[0][0]} {rang[0][1]})"/>'
         for i in range(8))
 
     svg = f"""
@@ -436,8 +438,8 @@ tl.from("#giay", {{y:-260, opacity:0, duration:0.5, ease:"steps(7)"}}, 0);
 {svg_vao}
 {quay}
 // tia sang toa ra khi may chay
-tl.to(".tia", {{opacity:0.45, duration:0.3, stagger:0.04, ease:"steps(3)"}}, 1.5);
-tl.to(".tia", {{opacity:0.15, duration:0.5, repeat:-1, yoyo:true, ease:"steps(2)"}}, 2.0);
+tl.to(".tia", {{opacity:0.9, duration:0.3, stagger:0.04, ease:"steps(3)"}}, 1.5);
+tl.to(".tia", {{opacity:0.35, duration:0.5, repeat:-1, yoyo:true, ease:"steps(2)"}}, 2.0);
 // ban tay buong ra = may lam thay nguoi
 tl.fromTo("#tay", {{x:380, y:520, opacity:0}}, {{x:0, y:0, opacity:1, duration:0.5, ease:"steps(7)"}}, 1.55);
 tl.to("#tay", {{x:420, y:400, opacity:0, duration:0.55, ease:"steps(6)"}}, 2.35);
