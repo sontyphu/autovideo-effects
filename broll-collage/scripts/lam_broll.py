@@ -50,8 +50,19 @@ for _luong in (sys.stdout, sys.stderr):
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 TEMPLATE = os.path.normpath(os.path.join(HERE, "..", "assets", "template"))
-# Xuong dung chung: cai 1 lan, tai dung mai (npm install rat cham, khong lam moi lan)
-XUONG = os.environ.get("BROLL_XUONG", r"E:\Video-Projects\_broll-collage-xuong")
+def _cho_dung_xuong():
+    """Xuong dung chung: cai 1 lan, tai dung mai (npm install rat cham).
+    Chon cho hop voi TUNG MAY - khong ep o E (may hoc vien thuong khong co)."""
+    tu_dat = os.environ.get("BROLL_XUONG")
+    if tu_dat:
+        return tu_dat
+    ten = "_broll-collage-xuong"
+    if os.name == "nt" and os.path.isdir("E:\\"):
+        return os.path.join("E:\\", "Video-Projects", ten)   # may anh Son
+    return os.path.join(os.path.expanduser("~"), "Video-Projects", ten)
+
+
+XUONG = _cho_dung_xuong()
 
 KHUNG = {
     "9:16": (1080, 1920),
